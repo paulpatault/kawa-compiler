@@ -1,9 +1,16 @@
 all:
 	dune build src/
 
-run:
+compile:
 ifdef file
 	@dune exec src/kawac.exe $(file)
+else
+	@echo 'file is not defined'
+endif
+
+run:
+ifdef file
+	java -jar ../Mars4_5.jar $(file)
 else
 	@echo 'file is not defined'
 endif
