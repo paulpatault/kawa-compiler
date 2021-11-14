@@ -44,12 +44,13 @@ Vous y retrouverez :
   Aucun de ceux-ci ne passe à la compilation.
 
 ## Travail réalisé
-### Travail demandé
+### Travail proposé
 - Compilation des classes :
   - Les descripteurs sont enregistrés statiquement dans `.data`.
   - Les objets sont alloués sur le tas.
-- Gestion complète de l'héritage (avec possibilité de surcharge) :
-  - ...
+- Gestion de l'héritage :
+  - héritage simple
+  - surcharches des méthodes
 - Vérification du typage avant la compilation :
   - Si le programme est mal typé, une exception avec un message d'erreur précis
   indiquant la cause de l'erreur ainsi que sa localisation dans le code.
