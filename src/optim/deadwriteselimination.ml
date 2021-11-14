@@ -7,11 +7,11 @@ let dwe_step fdef =
   Hashtbl.iter (fun l i ->
       match i with
       | Cst(r, _, next)
-      | Unop(r, _, _, next)
+      | Unop(r, (Addi _ | Subi _ | ShiftL _ | Move), _, next)
       | Binop(r, _, _, _, next)
       | GetGlobal(r, _, next)
-      | GetParam(r, _, next)
-      | Call(r, _, _, next) ->
+      | GetParam(r, _, next) ->
+      (* | Call(r, _, _, next) -> *)
          if S.mem r (Hashtbl.find live_out l) then
            ()
          else begin
@@ -19,7 +19,6 @@ let dwe_step fdef =
              change := true
            end
       | _ -> ()
-      (* TODO ? *)
     ) fdef.code;
   !change
 

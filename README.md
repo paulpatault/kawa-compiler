@@ -73,3 +73,6 @@ Vous y retrouverez :
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.
+- Les effets de bords ne sont pas "reconnus" par le calcul de liveness. J'ai du retirer le cas `Call`
+  dans le fichier `optim/deadwriteelimination.ml` car ce cas effaçait certains appels de méthodes
+  en trop.
