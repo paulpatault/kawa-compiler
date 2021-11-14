@@ -21,7 +21,6 @@ let () =
   let output_file = (Filename.chop_suffix file ".kawa") ^ ".pimp" in
   let out = open_out output_file in
   Pimppp.pp_program pimp out;
-  (* Pimppp.pp_program pimp out; *)
   close_out out;
   print_endline "[OK] kawa  -> pimp";
 

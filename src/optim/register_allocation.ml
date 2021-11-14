@@ -12,17 +12,6 @@ let registers =
 
 let nb_registers = Array.length registers
 
-(* let explicit_allocation coloring =
-  let a = Hashtbl.create 128 in
-  C.iter
-    (fun x i -> let r = if i < nb_registers then
-                          Register(registers.(i))
-                        else
-                          Stacked(i-nb_registers)
-                in Hashtbl.add a x r)
-    coloring;
-  a *)
-
 let make_interference_graph fdef =
   let _, live_out = Liveness.liveness fdef in
 
