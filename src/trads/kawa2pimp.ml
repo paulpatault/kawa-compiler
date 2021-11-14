@@ -68,7 +68,7 @@ let tr_prog (prog: Kawa.program): program =
     | Kawa.Add -> Add
     | Kawa.Mul -> Mul
     | Kawa.Lt  -> Lt
-    | Kawa.Le  -> Lt
+    | Kawa.Le  -> Le
     | Kawa.Gt  -> Gt
     | Kawa.Ge  -> Ge
     | Kawa.Eq  -> Eq
