@@ -1,0 +1,37 @@
+var B b;
+var A a;
+
+class A {
+
+  attribute int x;
+
+  method void constructor(int x) {
+    this.x = x;
+  }
+
+  method int print() {
+    putchar(this.x);
+  }
+}
+
+class B extends A {
+
+  attribute int y;
+
+  method void constructor(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  method int print() {
+    putchar(this.x + this.y);
+  }
+}
+
+main {
+  a = new A(4);
+  b = new B(1, 1);
+  a.print();
+  b.print();
+  return 0;
+}

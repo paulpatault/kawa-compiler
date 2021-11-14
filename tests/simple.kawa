@@ -1,0 +1,22 @@
+var A a;
+class A {
+
+  method void constructor() { }
+
+  method void coucou() {
+    var int i;
+    i = 0;
+    while (i < 5) {
+      putchar(i);
+      putchar(' ');
+      i = i + 1;
+    }
+  }
+
+}
+
+main {
+  a = new A();
+  a.coucou();
+  return 0;
+}

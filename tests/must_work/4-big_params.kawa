@@ -1,0 +1,22 @@
+var bigParam v;
+
+class bigParam {
+
+  method void constructor (int a, int b, int c, int d, int e, int f, int g, int h, int i) {
+    putchar(a);
+    putchar(b);
+    putchar(c);
+    putchar(d);
+    putchar(e);
+    putchar(f);
+    putchar(g);
+    putchar(h);
+    putchar(i);
+  }
+
+}
+
+main {
+  v = new bigParam(8, 7, 6, 5, 4, 3, 2, 1);
+  return 0;
+}

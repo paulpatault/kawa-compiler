@@ -1,0 +1,37 @@
+var point2d p2d;
+var point3d p3d;
+
+class point2d {
+
+  attribute int x;
+  attribute int y;
+
+  method void constructor(int px, int py) {
+    this.x = px;
+    this.y = py;
+  }
+
+  method int sum() {
+    return this.x + this.y;
+  }
+
+}
+
+class point3d extends point2d {
+
+  attribute int z;
+
+  method void constructor(int px, int py, int pz) {
+    this.x = px;
+    this.y = py;
+    this.z = pz;
+  }
+
+}
+
+main {
+  p2d = new point2d(4, 2);
+  p3d = new point3d(1, 2, 3);
+  putchar(p3d.sum());
+  return 0;
+}

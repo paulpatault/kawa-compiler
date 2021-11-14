@@ -1,0 +1,62 @@
+var point3d p3d;
+
+class printer {
+  method void constructor() {}
+
+  method void print() {}
+
+  method void space() {
+    putchar(' ');
+  }
+
+}
+class point2d extends printer {
+
+  attribute int x;
+  attribute int y;
+
+  method void constructor(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  method int sum() {
+    return this.x + this.y;
+  }
+
+  method void print() {
+    putchar(this.sum());
+    this.space();
+  }
+
+}
+
+class point3d extends point2d {
+
+  attribute int z;
+
+  method void constructor(int x, int y, int z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
+
+  method void move(int dx, int dy, int dz) {
+    this.x = this.x + dx;
+    this.y = this.y + dy;
+    this.z = this.z + dz;
+  }
+
+  method int sum() {
+    return this.x + this.y + this.z;
+  }
+}
+
+main {
+  p3d = new point3d(1, 2, 3);
+  p3d.print();
+  p3d.move(1, 1, 1);
+  p3d.print();
+  return 0;
+}
+

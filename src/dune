@@ -1,0 +1,3 @@
+(executable
+  (name kawac)
+  (libraries ast trads kawadir printer utils optim))

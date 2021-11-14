@@ -1,0 +1,37 @@
+var vector v;
+var point p;
+
+class point {
+  attribute int x;
+  attribute int y;
+
+
+  method void constructor (int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  method void print () {
+    putchar(this.x);
+    putchar(this.y);
+  }
+}
+
+class vector {
+  attribute point p1;
+
+  method void constructor (point p1) {
+    this.p1 = p;
+  }
+
+  method void print() {
+    this.p1.print();
+  }
+}
+
+main {
+  p = new point(3, 2);
+  v = new vector(p);
+  v.print();
+  return 0;
+}

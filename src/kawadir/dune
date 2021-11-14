@@ -1,0 +1,11 @@
+(library
+  (name kawadir)
+  (libraries ast))
+
+(menhir
+  (flags
+    (:standard -v))
+  (modules kawaparser))
+
+(ocamllex
+  (modules kawalexer))

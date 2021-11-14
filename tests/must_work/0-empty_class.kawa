@@ -1,0 +1,13 @@
+var point2d p2;
+
+class point2d {
+  method void constructor(int px) {
+    putchar(px);
+  }
+}
+
+main {
+  p2 = new point2d(42);
+  return 0;
+}
+
