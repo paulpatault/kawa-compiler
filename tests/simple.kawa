@@ -4,20 +4,14 @@ class A {
 
   method void constructor() { }
 
-  method void coucou() {
-    var int i;
-    i = 0;
-    while ((i < 10) || (i <= 4)) {
-      putchar(i);
-      putchar(' ');
-      i = i + 1;
-    }
+  method void side_effect() {
+    putchar(42);
   }
 
 }
 
 main {
   a = new A();
-  a.coucou();
+  a.side_effect();
   return 0;
 }
