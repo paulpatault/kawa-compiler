@@ -26,7 +26,7 @@ Compilateur optimisant du langage Kawa (langage objet type Java) vers l'assemble
 
 ## Organisation du code
 Le code est contenu dans le dossier `src/` et séparé en nombreux sous dossiers.
-Vous retrouverez les dossiers :
+Vous retrouverez donc :
 - `ast/` : contient l'ensemble des fichiers `kawa.ml`, `pimp.ml`, ...
 - `kawadir/` : contient le lexer, parser et type\_checker pour un fichier `.kawa`.
 - `optim/` : contient les fichiers utiles pour le phase de compilation optimisée.
@@ -34,6 +34,14 @@ Vous retrouverez les dossiers :
 - `trads/` : contient les fichiers `kawa2pimp.ml`, plus généralement tous les `x2y.ml`.
 - `utils/` : contient des fichiers implémentant un certain nombre de fonctions/exceptions/...
   utiles pour l'ensemble du projet.
+
+## Organisation des tests
+Les tests sont contenus dans le dossier `tests/` et séparé en deux sous dossiers.
+Vous y retrouverez :
+- `fonctionnels/` : contient de nombreux fichiers d'exemple qui sont bien compilé depuis
+  le langage `kawa` vers l'assembleur `mips`.
+- `errors/` : contient différents fichiers donnant différents exemples d'erreurs.
+  Aucun de ceux-ci ne passe à la compilation.
 
 ## Travail réalisé
 ### Travail demandé
