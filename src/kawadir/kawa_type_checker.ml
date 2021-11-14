@@ -74,17 +74,13 @@ let typ_prog (prog: program): unit =
     match e with
     | Cst _ -> Typ_Int
     | Bool _ -> Typ_Bool
-    | Binop (Eq, e1, e2) ->
+    | Binop ((Eq|Neq|And|Or), e1, e2) ->
         if typ_expr e1 = typ_expr e2 then Typ_Bool
         else error "" ~loc
-    | Binop (op, e1, e2) ->
-        let t1 = typ_expr e1 in
-        let t2 = typ_expr e2 in
-        let top = typ_op op in
-        begin match t1, t2 with
-        | Typ_Bool, Typ_Bool -> top
-        | Typ_Int, Typ_Int -> top
-        | _ -> error ~loc (Printf.sprintf "L'opérateur '%s' doit s'appliquer à deux variables de même type" (op_to_string op))
+    | Binop ((Add|Mul|Lt|Le|Gt|Ge) as op, e1, e2) ->
+        begin match typ_expr e1, typ_expr e2 with
+        | Typ_Int, Typ_Int -> typ_op op
+        | _ -> error ~loc (Printf.sprintf "L'opérateur '%s' doit s'appliquer à deux variables de type <int>" (op_to_string op))
         end
     | Get mem_access ->
         typ_mem_access mem_access loc
@@ -119,9 +115,9 @@ let typ_prog (prog: program): unit =
             ) l1 l2;
             ret
         | 1 ->
-            error "Premier plus grand" ~loc
+            error "La liste des paramètres effectifs est plus longue que la liste des paramètres formels" ~loc
         | -1 ->
-            error "Deuxième plus grand" ~loc
+            error "La liste des paramètres formels est plus longue que la liste des paramètres effectifs" ~loc
         | _ ->
             assert false
         end
