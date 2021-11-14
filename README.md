@@ -64,12 +64,12 @@ Vous y retrouverez :
   avec la procédure `putchar('c')`
 - Extension de la syntaxe de Kawa :
   - Ajout des opérateurs :
-    - LE:`<=`
-    - GT:`>`
-    - GE:`>=`
-    - NEQ:`!=`
-    - AND:`&&` (évaluation paresseuse)
-    - OR:`||` (évaluation paresseuse)
+    - LE : `<=`
+    - GT : `>`
+    - GE : `>=`
+    - NEQ : `!=`
+    - AND : `&&` (évaluation paresseuse)
+    - OR : `||` (évaluation paresseuse)
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.
