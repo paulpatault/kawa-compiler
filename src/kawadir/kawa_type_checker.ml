@@ -140,7 +140,7 @@ let typ_prog (prog: program): unit =
         end
   in
 
-  let rec typ_instr {instr_desc=i;instr_loc=loc} =
+  let rec typ_instr {instr_desc=i;instr_loc=loc} info =
     match i with
     | Putchar (C _) ->
         Typ_Void
@@ -153,7 +153,7 @@ let typ_prog (prog: program): unit =
               (typ_to_string t))
         end
     | If(e, b1, b2) ->
-        begin match typ_expr e, typ_seq b1, typ_seq b2 with
+        begin match typ_expr e, typ_seq b1 info, typ_seq b2 info with
         | Typ_Bool, Typ_Void, Typ_Void ->
             Printf.printf "IFF";
             Typ_Void
@@ -171,7 +171,7 @@ let typ_prog (prog: program): unit =
               (typ_to_string t))
         end
     | While(e, b) ->
-        begin match typ_expr e, typ_seq b with
+        begin match typ_expr e, typ_seq b info with
         | Typ_Bool, Typ_Void -> Typ_Void
         | t, Typ_Void ->
             error ~loc (Printf.sprintf
@@ -183,9 +183,14 @@ let typ_prog (prog: program): unit =
               (typ_to_string t))
         end
     | Return e ->
-        (* todo: check e typ of function *)
-        ignore(typ_expr e);
-        Typ_Void
+        let t = typ_expr e in
+        let name, ret = info in
+        if t = ret then
+          Typ_Void
+        else
+          error ~loc (Printf.sprintf
+            "La fonction %s est de type <%s> mais renvoie un type <%s>"
+            name (typ_to_string ret) (typ_to_string t))
     | Expr e ->
         typ_expr e
     | Set(mem_access, e) ->
@@ -210,22 +215,27 @@ let typ_prog (prog: program): unit =
           | Typ_Void, _ -> error ~loc "On ne peut rien assigner à un objet de type <void>"
         end
 
-  and typ_seq s = (* TODO: spec *)
+  and typ_seq s info = (* TODO: spec *)
     match s with
     | [] -> Typ_Void
     | e::k ->
-        match typ_instr e with
-        | Typ_Void | Typ_Int | Typ_Bool | Typ_Class _ -> typ_seq k
+        match typ_instr e info with
+        | Typ_Void | Typ_Int | Typ_Bool | Typ_Class _ -> typ_seq k info
   in
 
-  let typ_method meth =
+  let typ_method c meth =
+    begin if meth.method_name = "constructor" && meth.return <> Typ_Void then
+      error (Printf.sprintf
+        "Le constructeur de chaque classe doit être de type <void>,
+        alors que celui de la classe <%s> est de type <%s>" c.class_name (typ_to_string meth.return))
+    end;
     locals := meth.params;
     List.iter (fun (var, typ) ->
       if List.mem_assoc var !locals then
         locals := replace_assoc !locals var typ
       else locals := (var, typ) :: !locals
     ) meth.locals;
-    typ_seq meth.code
+    typ_seq meth.code (meth.method_name, meth.return)
   in
 
   let rec find_meth meth classe parent =
@@ -245,7 +255,7 @@ let typ_prog (prog: program): unit =
     let (_, meth), parent = Hashtbl.find classes_info_in_kawa classe.class_name in
     List.iter (fun (name, _typ) ->
       let mdef = find_meth name classe.class_name parent in
-      match typ_method mdef with
+      match typ_method classe mdef with
       | Typ_Void -> ()
       | _ -> assert false
     ) meth
@@ -295,5 +305,5 @@ let typ_prog (prog: program): unit =
   in
 
   typ_classes prog.classes;
-  ignore(typ_seq prog.main);
+  ignore(typ_seq prog.main ("main", Typ_Int));
 

@@ -1,0 +1,7 @@
+var A a;
+
+class A {
+  method int constructor() { }
+}
+
+main {}

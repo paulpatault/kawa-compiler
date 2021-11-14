@@ -1,0 +1,22 @@
+var A a;
+var int val;
+
+class A {
+
+  method void constructor() { }
+
+  method int func() {
+    if (true) {
+      return 1;
+    } else {
+      return false; // erreur : false ∉ int
+    }
+  }
+
+}
+
+main {
+  a = new A();
+  val = a.func();
+  return 0;
+}
