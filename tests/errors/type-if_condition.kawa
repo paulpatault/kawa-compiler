@@ -1,0 +1,12 @@
+var int d;
+
+
+main {
+  d = 0;
+  if (d) {     // erreur de type : d est <int> au lieu de <bool>
+    d = d + 1;
+  } else {
+    d = d + 2;
+    }
+  return 0;
+}

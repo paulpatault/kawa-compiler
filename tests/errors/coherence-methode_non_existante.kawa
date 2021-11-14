@@ -12,6 +12,7 @@ class point {
 }
 
 main {
-  p = new point(1, true);
+  p = new point(1, 2);
+  p.meth(); // methode non existante
   return 0;
 }

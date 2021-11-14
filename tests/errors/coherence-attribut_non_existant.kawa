@@ -1,0 +1,18 @@
+var point p;
+
+class point {
+  attribute int x;
+  attribute int y;
+
+  method void constructor (int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+}
+
+main {
+  p = new point(1, 2);
+  putchar(p.z); // attribut non existant
+  return 0;
+}

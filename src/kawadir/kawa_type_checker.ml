@@ -127,33 +127,64 @@ let typ_prog (prog: program): unit =
         begin match List.assoc_opt x !locals, List.assoc_opt x prog.globals with
           | Some t, _ -> t
           | _, Some t -> t
-          | _ -> error ~loc (Printf.sprintf "la variable %s n'existe pas" x)
+          | _ -> error ~loc (Printf.sprintf "La variable <%s> n'existe pas" x)
         end
     | Field(e, x) ->
-        let (attr, _), _ = Hashtbl.find classes_info_in_kawa (class_of_expr e) in
-        match List.assoc_opt x attr with
-        | Some t -> t
-        | None -> error ~loc (Printf.sprintf "l'attribut %s n'existe pas" x)
+        let c = class_of_expr e in
+        let (attr, _), _ = Hashtbl.find classes_info_in_kawa c in
+        begin match List.assoc_opt x attr with
+        | Some t ->
+            t
+        | None ->
+            error ~loc (Printf.sprintf "La classe <%s> ne possède pas d'attribut <%s>" c x)
+        end
   in
 
   let rec typ_instr {instr_desc=i;instr_loc=loc} =
     match i with
-    | Putchar _ ->
+    | Putchar (C _) ->
         Typ_Void
+    | Putchar (E e) ->
+        begin match typ_expr e with
+        | Typ_Int | Typ_Bool -> Typ_Void
+        | t ->
+            error ~loc (Printf.sprintf
+              "Le paramètre de putchar est de type <%s> alors qu'il devrait être de type <int> ou <bool>"
+              (typ_to_string t))
+        end
     | If(e, b1, b2) ->
         begin match typ_expr e, typ_seq b1, typ_seq b2 with
-        | Typ_Bool, Typ_Void, Typ_Void -> Typ_Void
-        | _, Typ_Void, Typ_Void -> error ~loc "e devrait etre bool"
-        | _, _, Typ_Void -> error ~loc "b1 devrait etre void"
-        | _, _, _ -> error ~loc "b2 devrait etre void"
+        | Typ_Bool, Typ_Void, Typ_Void ->
+            Printf.printf "IFF";
+            Typ_Void
+        | t, Typ_Void, Typ_Void ->
+            error ~loc (Printf.sprintf
+              "La condition d'un <if> est de type <%s> alors qu'elle devrait être de type <bool>"
+              (typ_to_string t))
+        | _, t, Typ_Void ->
+            error ~loc (Printf.sprintf
+              "Ce bloc est de type <%s> alors qu'il devrait être de type <void>"
+              (typ_to_string t))
+        | _, _, t ->
+            error ~loc (Printf.sprintf
+              "Ce bloc est de type <%s> alors qu'il devrait être de type <void>"
+              (typ_to_string t))
         end
     | While(e, b) ->
         begin match typ_expr e, typ_seq b with
         | Typ_Bool, Typ_Void -> Typ_Void
-        | _, Typ_Void -> error ~loc "e devrait etre bool"
-        | _, _ -> error ~loc "b devrait etre void"
+        | t, Typ_Void ->
+            error ~loc (Printf.sprintf
+              "La condition d'un <while> est de type <%s> alors qu'elle devrait être de type <bool>"
+              (typ_to_string t))
+        | _, t ->
+            error ~loc (Printf.sprintf
+              "Ce bloc est de type <%s> alors qu'il devrait être de type <void>"
+              (typ_to_string t))
         end
-    | Return _ ->
+    | Return e ->
+        (* todo: check e typ of function *)
+        ignore(typ_expr e);
         Typ_Void
     | Expr e ->
         typ_expr e
@@ -164,16 +195,22 @@ let typ_prog (prog: program): unit =
               Typ_Void
           | Typ_Class f, Typ_Class f' when f = f' ->
               Typ_Void
-          | Typ_Int, _ ->
-              error ~loc "e devrait etre int"
-          | Typ_Bool, _ ->
-              error ~loc "e devrait etre bool"
-          | Typ_Class f, _ ->
-              error ~loc (Printf.sprintf "e devrait etre %s" f)
-          | _ -> error ~loc "todo"
+          | Typ_Int, t ->
+              error ~loc (Printf.sprintf
+                "L'expression donnée est de type <%s> alors qu'elle devrait etre <int>"
+                (typ_to_string t))
+          | Typ_Bool, t ->
+              error ~loc (Printf.sprintf
+                "L'expression donnée est de type <%s> alors qu'elle devrait etre <bool>"
+                (typ_to_string t))
+          | Typ_Class f, t ->
+              error ~loc (Printf.sprintf
+                "L'expression donnée est de type <%s> alors qu'elle devrait etre <class:%s>"
+                (typ_to_string t) f)
+          | Typ_Void, _ -> error ~loc "On ne peut rien assigner à un objet de type <void>"
         end
 
-  and typ_seq s =
+  and typ_seq s = (* TODO: spec *)
     match s with
     | [] -> Typ_Void
     | e::k ->
@@ -258,5 +295,5 @@ let typ_prog (prog: program): unit =
   in
 
   typ_classes prog.classes;
-  ignore(typ_seq prog.main)
+  ignore(typ_seq prog.main);
 
