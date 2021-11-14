@@ -16,6 +16,9 @@ let pp_binop: binop -> string = function
   | Lt  -> "<"
   | Le  -> "<="
   | Eq  -> "=="
+  | Neq -> "!="
+  | And  -> "&&"
+  | Or  -> "||"
 
 let rec pp_args: string list -> string = function
   | [] -> ""

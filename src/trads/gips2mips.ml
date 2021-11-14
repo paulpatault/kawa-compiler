@@ -55,6 +55,9 @@ let translate_fdef fdef =
         | Lt  -> slt
         | Le  -> sle
         | Eq  -> seq
+        | Neq -> sne
+        | And -> and_
+        | Or  -> or_
         end in
         op r r1 r2 @@ translate_label next
 

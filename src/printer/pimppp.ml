@@ -6,10 +6,13 @@ let pp_binop: binop -> string = function
   (* | Sub -> "-" *)
   | Mul -> "*"
   | Lt  -> "<"
-  (* | Le  -> "<=" *)
-  (* | Gt  -> ">" *)
-  (* | Ge  -> ">=" *)
+  | Le  -> "<="
+  | Gt  -> ">"
+  | Ge  -> ">="
   | Eq  -> "=="
+  | Neq  -> "!="
+  | And  -> "&&"
+  | Or  -> "||"
 
 
 let pp_program prog out_channel =

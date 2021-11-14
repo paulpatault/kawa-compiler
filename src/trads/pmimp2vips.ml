@@ -62,6 +62,9 @@ let translate_fdef f =
           | Pmimp.Add -> Add
           | Pmimp.Sub -> Sub
           | Pmimp.Eq  -> Eq
+          | Pmimp.Neq -> Neq
+          | Pmimp.And -> And
+          | Pmimp.Or  -> Or
         in
         let tmp1 = new_reg () in
         let tmp2 = new_reg () in

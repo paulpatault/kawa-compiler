@@ -18,6 +18,9 @@ let tr_binop = function
   | Vips.Lt  -> Lt
   | Vips.Le  -> Le
   | Vips.Eq  -> Eq
+  | Vips.Neq -> Neq
+  | Vips.And -> And
+  | Vips.Or -> Or
 
 let translate_fdef fdef =
   let code = Hashtbl.create 32 in
@@ -34,12 +37,6 @@ let translate_fdef fdef =
   in
 
   let reg_use_list = ref [] in
-
-  (* let reg_use_list = ref
-     [Mips.t0;Mips.t1;Mips.t2;Mips.t3;Mips.t4;
-      Mips.t5;Mips.t6;Mips.t7;Mips.t8;Mips.t9;
-      Mips.s0;Mips.s1;Mips.s2;Mips.s3;Mips.s4;
-      Mips.s5;Mips.s6;Mips.s7] in *)
 
   let save_reg l =
     let empile = fun acc e -> add_instr(Push(e, acc)) in

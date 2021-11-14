@@ -62,6 +62,14 @@ Vous y retrouverez :
 ### Modifications personnels
 - Ajout de la possibilité d'imprimer des caratères (attention : il ne s'agit pas de strings)
   avec la procédure `putchar('c')`
+- Extension de la syntaxe de Kawa :
+  - Ajout des opérateurs :
+    - LE:`<=`
+    - GT:`>`
+    - GE:`>=`
+    - NEQ:`!=`
+    - AND:`&&` (évaluation paresseuse)
+    - OR:`||` (évaluation paresseuse)
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.

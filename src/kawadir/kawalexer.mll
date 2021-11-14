@@ -59,10 +59,22 @@ rule token = parse
       { PLUS }
   | "*"
       { STAR }
+  | "&&"
+      { AND }
+  | "||"
+      { OR }
   | "<"
       { LT }
+  | "<="
+      { LE }
+  | ">"
+      { GT }
+  | ">="
+      { GE }
   | "=="
       { EQ }
+  | "!="
+      { NEQ }
   | "("
       { LPAR }
   | ")"

@@ -12,7 +12,13 @@ let op_to_string = function
   | Add -> "+"
   | Mul -> "*"
   | Lt  -> "<"
+  | Le  -> "<="
+  | Gt  -> ">"
+  | Ge  -> ">="
   | Eq  -> "=="
+  | Neq -> "!="
+  | And -> "&&"
+  | Or  -> "||"
 
 let typ_prog (prog: program): unit =
 
@@ -55,7 +61,13 @@ let typ_prog (prog: program): unit =
     | Add -> Typ_Int
     | Mul -> Typ_Int
     | Lt  -> Typ_Bool
+    | Le  -> Typ_Bool
+    | Gt  -> Typ_Bool
+    | Ge  -> Typ_Bool
     | Eq  -> Typ_Bool
+    | Neq -> Typ_Bool
+    | And -> Typ_Bool
+    | Or  -> Typ_Bool
   in
 
   let rec typ_expr {expr_desc=e;expr_loc=loc} =

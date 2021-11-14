@@ -15,8 +15,8 @@
 
 %}
 
-%token PLUS STAR
-%token LT EQ
+%token PLUS STAR AND OR
+%token LT LE GT GE EQ NEQ
 
 %token <int> CST
 %token <char> CHAR
@@ -28,9 +28,9 @@
 %token PUTCHAR SET IF ELSE WHILE RETURN
 %token EOF
 
-%nonassoc LT EQ
-%left PLUS
-%left STAR
+%nonassoc LT LE GT GE EQ NEQ
+%left PLUS OR
+%left STAR AND
 %left DOT
 
 %start program
@@ -131,6 +131,12 @@ expression_desc:
 | PLUS { Add }
 | STAR { Mul }
 | LT { Lt }
+| LE { Le }
+| GT { Gt }
+| GE { Ge }
 | EQ { Eq }
+| NEQ { Neq }
+| AND { And }
+| OR { Or }
 ;
 

@@ -1,6 +1,6 @@
 type unop = Addi of int | Subi of int | ShiftL of int | Read | Alloc | Dec of int
 
-type binop = Add | Sub | Mul | Lt | Le | Eq
+type binop = Add | Sub | Mul | Lt | Le | Eq | Neq | And | Or
 
 type expression =
   | Cst   of int
@@ -126,8 +126,35 @@ let mk_eq e1 e2 =
   | e1', e2' ->
       Binop(Eq, e1', e2')
 
-let e =
-  Binop(Mul,
-        Unop(Addi 6, Var "x"),
-        Unop(Addi 1,
-             Unop(ShiftL 1, Var "x")))
+let mk_neq e1 e2 =
+  match e1, e2 with
+  | Cst n1, Cst n2 ->
+      if n1 <> n2 then Cst 1
+      else Cst 0
+  | e1', e2' ->
+      Binop(Neq, e1', e2')
+
+let mk_or e1 e2 =
+  match e1, e2 with
+  | Cst n1, Cst n2 ->
+      if n1 <> 0 then Cst 1
+      else if n2 <> 0 then Cst 1
+      else Cst 0
+  | Cst n, e ->
+      if n = 0 then e
+      else Cst 1
+  | e1', e2' ->
+      Binop(Or, e1', e2')
+
+let mk_and e1 e2 =
+  match e1, e2 with
+  | Cst n1, Cst n2 ->
+      if n1 <> 0 then
+        if n2 <> 0 then Cst 1
+        else Cst 0
+      else Cst 0
+  | Cst n, e ->
+      if n = 0 then Cst 0
+      else e
+  | e1', e2' ->
+      Binop(And, e1', e2')

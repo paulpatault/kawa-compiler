@@ -8,6 +8,9 @@ let pp_binop: binop -> string = function
   | Lt  -> "<"
   | Le  -> "<="
   | Eq  -> "=="
+  | Neq -> "!="
+  | And  -> "&&"
+  | Or  -> "||"
 
 let pp_program prog out_channel =
   let print s = fprintf out_channel s in

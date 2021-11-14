@@ -1,15 +1,3 @@
-(**
-   Traduction de IMP vers MIMP.
-   Deux objectifs
-   - simplifier les expressions qui peuvent déjà être partiellement calculées,
-   - sélectionner des opérateurs optimisés comme [Addi] lorsque c'est possible.
-   La sélection repose sur des fonctions comme [mk_add] à définir dans le
-   module MIMP.
-
-   En dehors de ces simplifications et du codage des constantes booléennes par
-   des entiers, la structure du programme reste la même.
- *)
-
 open Ast
 open Pmimp
 
@@ -31,14 +19,21 @@ let rec isel_expr: Pimp.expression -> Pmimp.expression = function
       Addr s
   | Pimp.Seq(seq, e) ->
       Seq (List.map isel_instr seq, isel_expr e)
-  | Pimp.Binop(Pimp.Add, e1, e2) ->
-      mk_add (isel_expr e1) (isel_expr e2)
-  | Pimp.Binop(Pimp.Mul, e1, e2) ->
-      mk_mul (isel_expr e1) (isel_expr e2)
-  | Pimp.Binop(Pimp.Lt, e1, e2) ->
-      mk_lt (isel_expr e1) (isel_expr e2)
-  | Pimp.Binop(Pimp.Eq, e1, e2) ->
-      mk_eq (isel_expr e1) (isel_expr e2)
+  | Pimp.Binop(op, e1, e2) ->
+      let e1 = isel_expr e1 in
+      let e2 = isel_expr e2 in
+      begin match op with
+      | Pimp.Add -> mk_add e1 e2
+      | Pimp.Mul -> mk_mul e1 e2
+      | Pimp.Lt  -> mk_lt e1 e2
+      | Pimp.Le  -> mk_le e1 e2
+      | Pimp.Gt  -> mk_lt e2 e1
+      | Pimp.Ge  -> mk_le e2 e1
+      | Pimp.Eq  -> mk_eq e1 e2
+      | Pimp.Neq -> mk_neq e1 e2
+      | Pimp.And -> mk_and e1 e2
+      | Pimp.Or  -> mk_or e1 e2
+      end
   | Pimp.Call(Pimp.FName x, el) ->
       let l = List.map (isel_expr) el in
       Call(x, l)
