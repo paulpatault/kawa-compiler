@@ -10,7 +10,7 @@ endif
 
 run:
 ifdef file
-	java -jar ../Mars4_5.jar $(file)
+	java -jar Mars4_5.jar $(file)
 else
 	@echo 'file is not defined'
 endif
