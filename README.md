@@ -49,11 +49,15 @@ Vous y retrouverez :
   - Les descripteurs sont enregistrés statiquement dans `.data`.
   - Les objets sont alloués sur le tas.
 - Gestion de l'héritage :
-  - héritage simple
-  - surcharches des méthodes
+  - héritage simple : ...
+  - extension des attributs : ...
+  - extension des méthodes : ...
+  - surcharches des méthodes : ...
 - Vérification du typage avant la compilation :
-  - Si le programme est mal typé, une exception avec un message d'erreur précis
-  indiquant la cause de l'erreur ainsi que sa localisation dans le code.
+  - Vous retrouverez l'appel à `Kawa.type_checker.typ_prog` dans le main de `kawac.ml`.
+  Cette procédure à pour fonction de vérifier le bon typage et la cohérence du programme `kawa`.
+  Ainsi, si le programme est incohérent ou mal typé, une exception accompagnée un message d'erreur
+  précis indiquant la cause de l'erreur ainsi que sa localisation dans le code.
 
 ### Modifications personnels
 - Ajout de la possibilité d'imprimer des caratères (attention : il ne s'agit pas de strings)
