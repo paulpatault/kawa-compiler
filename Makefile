@@ -20,6 +20,9 @@ clean:
 
 cleanall:
 	make clean
-	rm -f tests/*imp tests/*ips* tests/*.asm
-	rm -f tests/must_work/*imp tests/must_work/*ips* tests/must_work/*.asm
-	rm -f tests/errors/*imp tests/errors/*ips* tests/errors/*.asm
+	find tests/ -name '*.pimp' -type f -delete
+	find tests/ -name '*.pmimp' -type f -delete
+	find tests/ -name '*.vips' -type f -delete
+	find tests/ -name '*.vipsopt' -type f -delete
+	find tests/ -name '*.gips' -type f -delete
+	find tests/ -name '*.asm' -type f -delete
