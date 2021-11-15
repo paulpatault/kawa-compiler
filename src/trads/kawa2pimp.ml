@@ -15,7 +15,7 @@ let mk_tags = function
         | _ -> assert false
       ) l
 
-let tr_prog (prog: Kawa.program): program =
+let tr_prog (prog: Kawa.program) =
 
   let classes_info_in_kawa = Hashtbl.create 42 in
 
@@ -209,7 +209,7 @@ let tr_prog (prog: Kawa.program): program =
   (* *************************)
   (* Tradution d'une méthode *)
   (* *************************)
-  let tr_method (c: Kawa.class_def) (meth: Kawa.method_def): function_def =
+  let tr_method (c: Kawa.class_def) (meth: Kawa.method_def) =
     locals := meth.params;
     (* concat class name *)
     let name = mk_fun_name c.class_name meth.method_name in
@@ -239,31 +239,20 @@ let tr_prog (prog: Kawa.program): program =
       end
   in
 
-  let tr_class (c: Kawa.class_def) =
-    let attr =
-      let (attr, _), _ = Hashtbl.find classes_info_in_kawa Kawa.(c.class_name) in
-      List.fold_left (fun acc (name, _) ->
-        name :: acc
-      ) [] attr
-    in
-
-    let meth =
-      let (_, meth), parent = Hashtbl.find classes_info_in_kawa Kawa.(c.class_name) in
-        List.fold_left (fun acc (name, _typ) ->
-          let mdef = find_meth name c.class_name parent in
-          let code_trad = tr_method c mdef in
-          (code_trad.name, code_trad) :: acc
-        ) [] meth
-    in
-
-    Array.of_list attr, Array.of_list meth
+  let tr_class c =
+    let (_, meth), parent = Hashtbl.find classes_info_in_kawa Kawa.(c.class_name) in
+    List.fold_left (fun acc (name, _typ) ->
+      let mdef = find_meth name c.class_name parent in
+      let code_trad = tr_method c mdef in
+      (code_trad.name, code_trad) :: acc
+    ) [] meth
   in
 
 
   (* ***********************)
   (* Tradution des classes *)
   (* ***********************)
-  let tr_classes (classes: Kawa.class_def list) =
+  let tr_classes classes =
 
     List.iter (fun c ->
       match Kawa.(c.parent) with
@@ -302,12 +291,12 @@ let tr_prog (prog: Kawa.program): program =
           Hashtbl.add classes_info_in_kawa Kawa.(c.class_name) pair
     ) classes;
 
-    List.fold_left (fun acc c ->
+    List.fold_right (fun c acc ->
       curr_class := Kawa.(c.class_name);
-      let _attr, meth_arr = tr_class c in
-      let acc' = Array.fold_right (fun (_, code) acc -> code :: acc) meth_arr [] in
+      let meths = tr_class c in
+      let acc' = List.fold_right (fun (_, code) acc -> code :: acc) meths [] in
       acc' @ acc
-    ) [] classes |> List.rev
+    ) classes []
 
   in
 
