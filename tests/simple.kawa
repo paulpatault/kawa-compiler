@@ -17,7 +17,9 @@ class A {
 
 main {
   a = new A();
-  a.untagged(); // coupée
-  a.tagged();   // pas coupée
+  a.untagged(); // supprimée
+  a.tagged();   // pas supprimée
   return 0;
 }
+
+

@@ -68,16 +68,10 @@ Vous y retrouverez :
 - Ajout de la possibilité d'imprimer des caratères (attention : il ne s'agit pas de strings)
   avec la procédure `putchar('c')`
 - Extension de la syntaxe de Kawa :
-  - Ajout des opérateurs :
-    - LE : `<=`
-    - GT : `>`
-    - GE : `>=`
-    - NEQ : `!=`
-    - AND : `&&` (évaluation paresseuse)
-    - OR : `||` (évaluation paresseuse)
-  - Annotations dans le code :
-    - Tags : `@...` dans le code avant une déclaration de méthode, permet de donner un tag à cette méthode
-      - `@not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels
+  - Ajout des opérateurs : `<=`, `>`, `>=`, `!=`, `&&`, `||`
+  - Annotations dans le code (tags) : `@...` dans le code avant une déclaration de méthode,
+  permet de donner un tag à cette méthode
+    - `@not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.
