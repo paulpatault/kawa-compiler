@@ -229,6 +229,14 @@ let typ_prog (prog: program): unit =
         "Le constructeur de chaque classe doit être de type <void>,
         alors que celui de la classe <%s> est de type <%s>" c.class_name (typ_to_string meth.return))
     end;
+
+    List.iter (fun (x, _typ) ->
+      if Char.uppercase_ascii x.[0] = x.[0] then
+        error (Printf.sprintf
+          "La variable <%s> commence par une majuscule, alors que les noms de variables doivent commencer par une minuscule"
+          x);
+    ) meth.locals;
+
     locals := meth.params;
     List.iter (fun (var, typ) ->
       if List.mem_assoc var !locals then
@@ -305,5 +313,13 @@ let typ_prog (prog: program): unit =
   in
 
   typ_classes prog.classes;
+
+  List.iter (fun (x, _typ) ->
+        if Char.uppercase_ascii x.[0] = x.[0] then
+          error (Printf.sprintf
+            "La variable <%s> commence par une majuscule, alors que les noms de variables doivent commencer par une minuscule"
+            x
+          );
+  ) prog.globals;
   ignore(typ_seq prog.main ("main", Typ_Int));
 
