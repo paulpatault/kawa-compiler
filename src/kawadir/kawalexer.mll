@@ -49,6 +49,8 @@ rule token = parse
       { CST(int_of_string n) }
   | ident as id
       { keyword_or_ident id }
+  | '@' ident as id
+      { TAG(id) }
   | "'" (_ as c) "'"
       { CHAR(c) }
   | ";"

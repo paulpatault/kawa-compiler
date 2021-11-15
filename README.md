@@ -75,6 +75,9 @@ Vous y retrouverez :
     - NEQ : `!=`
     - AND : `&&` (évaluation paresseuse)
     - OR : `||` (évaluation paresseuse)
+  - Annotations dans le code :
+    - Tags : `@...` dans le code avant une déclaration de méthode, permet de donner un tag à cette méthode
+      - `@not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.

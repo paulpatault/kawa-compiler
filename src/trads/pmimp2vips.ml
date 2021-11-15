@@ -72,15 +72,15 @@ let translate_fdef f =
         let l1 = translate_expr tmp1 e1 l in
         translate_expr tmp2 e2 l1
 
-    | Pmimp.Call(f, args) ->
+    | Pmimp.Call(f, args, tag) ->
         let tmps = List.map (fun _ -> new_reg ()) args in
-        let l = add_instr (Call(r, FName f, tmps, next)) in
+        let l = add_instr (Call(r, FName f, tmps, tag, next)) in
         translate_args tmps args l
 
-    | Pmimp.CallPointeur(fp, args) ->
+    | Pmimp.CallPointeur(fp, args, tag) ->
         let tmps = List.map (fun _ -> new_reg ()) args in
         let f = new_reg () in
-        let l = add_instr (Call(r, FPointeur f, tmps, next)) in
+        let l = add_instr (Call(r, FPointeur f, tmps, tag, next)) in
         let l = translate_expr f fp l in
         translate_args tmps args l
 
@@ -176,7 +176,7 @@ let translate_fdef f =
   {
     name = Pmimp.(f.name);
     code;
-    entry
+    entry;
   }
 
 let translate_prog p = {

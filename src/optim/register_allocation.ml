@@ -36,7 +36,7 @@ let make_interference_graph fdef =
           graph := Graph.add_node r1 !graph;
           graph := Graph.add_node r2 !graph;
           graph := Graph.add_node r3 !graph;
-      | Call(r, _, rl, _) ->
+      | Call(r, _, rl, _, _) ->
           List.iter (fun r -> graph := Graph.add_node r !graph) (r::rl)
       | StaticWrite(_, rl, _) ->
           List.iter (fun r -> graph := Graph.add_node r !graph) rl
@@ -48,7 +48,7 @@ let make_interference_graph fdef =
   Hashtbl.iter (fun label instr ->
     match instr with
     | Cst(r, _, _) | Addr(r, _, _) | Unop(r, _, _, _) | Binop(r, _, _, _, _) | GetGlobal(r, _, _) | GetParam(r, _, _)
-    | Call(r, _, _, _) ->
+    | Call(r, _, _, _, _) ->
         Graph.S.iter (fun r' ->
           graph := Graph.add_edge r r' (!graph))
         (Graph.S.diff (Hashtbl.find live_out label) (Graph.S.add r Graph.S.empty))

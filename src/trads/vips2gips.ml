@@ -250,7 +250,7 @@ let translate_fdef fdef =
     | Vips.StaticWrite(r, el, next) ->
         StaticWrite(r, el, next)
 
-    | Vips.Call(r, func, args, next) ->
+    | Vips.Call(r, func, args, _tag, next) ->
 
         (* Protocole : étape 4 *)
         let retrieve_result = match Hashtbl.find alloc r with

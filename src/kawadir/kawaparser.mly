@@ -18,6 +18,8 @@
 %token PLUS STAR AND OR
 %token LT LE GT GE EQ NEQ
 
+
+%token <string> TAG
 %token <int> CST
 %token <char> CHAR
 %token <bool> BOOL
@@ -81,9 +83,10 @@ class_def:
 ;
 
 method_def:
-| METHOD return=typ method_name=IDENT LPAR params=separated_list(COMMA, typed_ident) RPAR
+| tag=option(TAG)
+  METHOD return=typ method_name=IDENT LPAR params=separated_list(COMMA, typed_ident) RPAR
     BEGIN locals=list(variable_decl) code=list(instruction) END
-    { {method_name; code; params; locals; return} }
+    { {method_name; code; params; locals; return; tag} }
 ;
 
 mem_access:

@@ -34,12 +34,12 @@ let rec isel_expr: Pimp.expression -> Pmimp.expression = function
       | Pimp.And -> mk_and e1 e2
       | Pimp.Or  -> mk_or e1 e2
       end
-  | Pimp.Call(Pimp.FName x, el) ->
+  | Pimp.Call(Pimp.FName x, el, tag) ->
       let l = List.map (isel_expr) el in
-      Call(x, l)
-  | Pimp.Call(Pimp.FPointer e, el) ->
+      Call(x, l, tag)
+  | Pimp.Call(Pimp.FPointer e, el, tag) ->
       let l = List.map (isel_expr) el in
-      CallPointeur(isel_expr e, l)
+      CallPointeur(isel_expr e, l, tag)
 
 and isel_instr: Pimp.instruction -> Pmimp.instruction = function
   | Pimp.Putchar (PAscii n) ->

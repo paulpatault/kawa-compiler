@@ -20,6 +20,11 @@ let pp_binop: binop -> string = function
   | And  -> "&&"
   | Or  -> "||"
 
+let tag_to_string = function
+  | Ast.Pimp.Not_Optim -> "Not_Optim"
+  | Ast.Pimp.Empty -> "none"
+
+
 let rec pp_args: string list -> string = function
   | [] -> ""
   | [a] -> a
@@ -55,10 +60,10 @@ let pp_program prog out_channel =
        print "putchar(%s)     | %s" r l
     | Putchar(Ascii n, l) ->
         print "putascii(%d);     | %s" n l
-    | Call(d, FName f, rs, l) ->
-       print "%s <- %s(%s)    | %s" d f (pp_args rs) l
-    | Call(d, FPointeur f, rs, l) ->
-       print "%s <- _fpointeur_%s(%s)    | %s" d f (pp_args rs) l
+    | Call(d, FName f, rs, tag, l) ->
+       print "%s <- %s(%s) @<tag:%s>   | %s" d f (pp_args rs) l (tag_to_string tag)
+    | Call(d, FPointeur f, rs, tag, l) ->
+       print "%s <- _fpointeur_%s(%s) @<tag:%s>   | %s" d f (pp_args rs) l (tag_to_string tag)
     | Return r ->
        print "return %s"            r
     | Write(r1, r2, l) ->

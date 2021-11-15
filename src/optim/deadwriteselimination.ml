@@ -10,14 +10,18 @@ let dwe_step fdef =
       | Unop(r, (Addi _ | Subi _ | ShiftL _ | Move), _, next)
       | Binop(r, _, _, _, next)
       | GetGlobal(r, _, next)
-      | GetParam(r, _, next) ->
-      (* | Call(r, _, _, next) -> *)
-         if S.mem r (Hashtbl.find live_out l) then
-           ()
-         else begin
-             Hashtbl.replace fdef.code l (Jump next);
-             change := true
-           end
+      | GetParam(r, _, next)
+      | Call(r, _, _, _, next) ->
+          let optim = match i with
+          | Call (_, _, _, Not_Optim, _)-> false
+          | _ -> true
+          in
+          if not optim || S.mem r (Hashtbl.find live_out l) then
+            ()
+          else begin
+            Hashtbl.replace fdef.code l (Jump next);
+            change := true
+          end
       | _ -> ()
     ) fdef.code;
   !change

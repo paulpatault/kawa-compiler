@@ -12,6 +12,11 @@ let pp_binop: binop -> string = function
   | And  -> "&&"
   | Or  -> "||"
 
+let tag_to_string = function
+  | Ast.Pimp.Not_Optim -> "Not_Optim"
+  | Ast.Pimp.Empty -> "none"
+
+
 let pp_program prog out_channel =
   let print s = fprintf out_channel s in
   let margin = ref 0 in
@@ -69,10 +74,10 @@ let pp_program prog out_channel =
         sprintf "%i(%s)" n (pp_expression e)
     | Binop(op, e1, e2) ->
         sprintf "(%s%s%s)" (pp_expression e1) (pp_binop op) (pp_expression e2)
-    | Call(f, args) ->
-        sprintf "%s(%s)" f (pp_args args)
-    | CallPointeur(f, args) ->
-        sprintf "fpointeur:%s(%s)" (pp_expression f) (pp_args args)
+    | Call(f, args, tag) ->
+        sprintf "%s(%s) @<tag:%s>" f (pp_args args) (tag_to_string tag)
+    | CallPointeur(f, args, tag) ->
+        sprintf "fpointeur:%s(%s) @<tag:%s>" (pp_expression f) (pp_args args) (tag_to_string tag)
     | Seq(seq, e) ->
         List.iter (fun i -> pp_instruction i; print "\n"; print_margin ()) seq;
         pp_expression e

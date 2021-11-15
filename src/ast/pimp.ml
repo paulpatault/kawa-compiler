@@ -1,3 +1,5 @@
+type tag = Not_Optim | Empty
+
 type unop = Read | Alloc | Dec of int
 type binop = Add | Mul | Lt | Le | Gt | Ge | Eq | Neq | And | Or
 
@@ -7,7 +9,7 @@ type expression =
   | Var   of string
   | Unop  of unop * expression
   | Binop of binop * expression * expression
-  | Call  of func * expression list
+  | Call  of func * expression list * tag
   | Addr  of string
   | Seq   of sequence * expression
 
@@ -36,6 +38,7 @@ type function_def = {
   code: sequence;
   params: string list;
   locals: string list;
+  tag: tag
 }
 
 type program = {

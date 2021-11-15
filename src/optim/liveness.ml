@@ -7,7 +7,7 @@ let def = function
   | Cst(r, _, _)
   | Addr(r, _, _)
   | Unop(r, _, _, _)
-  | Call(r, _, _, _)
+  | Call(r, _, _, _, _)
   | GetParam(r, _, _)
   | GetGlobal(r, _, _)
   | Binop(r, _, _, _, _) ->
@@ -39,7 +39,7 @@ let use = function
   | Write(r1, r2, _) ->
       S.of_list [r1; r2]
   | StaticWrite(_, rlist, _)
-  | Call(_, _, rlist, _) ->
+  | Call(_, _, rlist, _, _) ->
       S.of_list rlist
 
 let liveness fdef =
@@ -59,7 +59,7 @@ let liveness fdef =
       | GetGlobal(_, _, next)
       | SetGlobal(_, _, next)
       | GetParam(_, _, next)
-      | Call(_, _, _, next)
+      | Call(_, _, _, _, next)
       | Write(_, _, next)
       | StaticWrite(_, _, next)
       | Putchar(_, next) ->
@@ -97,7 +97,7 @@ let liveness fdef =
       | GetGlobal(_, _, next)
       | SetGlobal(_, _, next)
       | GetParam(_, _, next)
-      | Call(_, _, _, next)
+      | Call(_, _, _, _, next)
       | Write(_, _, next)
       | StaticWrite(_, _, next)
       | Putchar(_, next) ->

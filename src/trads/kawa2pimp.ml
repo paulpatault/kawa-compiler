@@ -40,23 +40,24 @@ let tr_prog (prog: Kawa.program): program =
         let c_e = class_of_expr e.expr_desc in
         let (_, meths), _parent = Hashtbl.find classes_info_in_kawa c_e in
         begin match List.assoc_opt f meths with
-        | Some (Kawa.(Typ_Class s)) -> s
+        | Some (Kawa.(Typ_Class s), _tag) -> s
         | _ -> assert false
         end
   in
 
   let get_dec expr info =
-    let unpair, name =
-      match info with
-      | `Method f -> snd, f
-      | `Attribut x -> fst, x
-    in
     try
-      let pair, _parent = Hashtbl.find classes_info_in_kawa (class_of_expr expr) in
-      let mlist = unpair pair |> List.rev in
-      List.iteri (fun meth_or_attr_i (name', _typ) ->
-        if name = name' then raise (Brk_i meth_or_attr_i)
-      ) mlist;
+      let (attr, meths), _parent = Hashtbl.find classes_info_in_kawa (class_of_expr expr) in
+      begin match info with
+      | `Method name ->
+          List.iteri (fun i (name', _) ->
+            if name = name' then raise (Brk_i i)
+            ) (List.rev meths)
+      | `Attribut name ->
+          List.iteri (fun i (name', _) ->
+            if name = name' then raise (Brk_i i)
+            ) (List.rev attr)
+      end;
       assert false
     with Brk_i dec -> 4 * (dec + 1)
   in
@@ -117,7 +118,8 @@ let tr_prog (prog: Kawa.program): program =
         let expr2 =
           Call (
             FName (mk_fun_name class_name "constructor"),
-            this::params
+            this::params,
+            Empty
           ) in
         (* 4. suite et fin *)
         let seq = [alloc;set;Expr expr2] in
@@ -127,9 +129,18 @@ let tr_prog (prog: Kawa.program): program =
         let e' = tr_expr e.expr_desc in
         let class_descr = Unop(Dec 0, e') in
         let dec = get_dec e.expr_desc (`Method f) in
-        let f = Unop(Dec dec, class_descr) in
+        let f' = Unop(Dec dec, class_descr) in
         let params = List.map (fun e -> tr_expr Kawa.(e.expr_desc)) params in
-        Call(FPointer f, e'::params)
+
+        let class_name = class_of_expr e.expr_desc in
+        let (_, meths), _ = Hashtbl.find classes_info_in_kawa class_name in
+        let _typ, tag = List.assoc f meths in
+        let tag = match tag with
+        | Some "@not_optim" -> Not_Optim
+        | _ -> Empty
+        in
+
+        Call(FPointer f', e'::params, tag)
   in
 
   (* *****************************)
@@ -180,7 +191,12 @@ let tr_prog (prog: Kawa.program): program =
     (* ajouter un param: instance appellante*)
     let params = "this" :: List.map fst meth.params in
     let locals = "This_alloc_name" :: List.map fst meth.locals in
-    {name;code;params;locals}
+    let tag =
+      match meth.tag with
+      | Some _t -> Not_Optim
+      | None -> Empty
+    in
+    {name;code;params;locals;tag}
   in
 
   (* ************************)
@@ -232,10 +248,10 @@ let tr_prog (prog: Kawa.program): program =
           let (parent_attr, parent_meths), _ = Hashtbl.find classes_info_in_kawa parent in
 
           let meths = List.fold_left
-            (fun acc Kawa.{method_name;return;_} ->
+            (fun acc Kawa.{method_name;return;tag;_} ->
               if List.mem_assoc method_name acc then
-                replace_assoc acc method_name return
-              else (method_name, return) :: acc)
+                replace_assoc acc method_name (return, tag)
+              else (method_name, (return, tag)) :: acc)
             parent_meths Kawa.(c.methods)
           in
 
@@ -251,7 +267,7 @@ let tr_prog (prog: Kawa.program): program =
           Hashtbl.add classes_info_in_kawa Kawa.(c.class_name) pair
       | None ->
           let meths = List.fold_left
-            (fun acc Kawa.{method_name;return;_} -> (method_name, return) :: acc)
+            (fun acc Kawa.{method_name;return;tag;_} -> (method_name, (return, tag)) :: acc)
             [] Kawa.(c.methods)
           in
           let attr = List.fold_left
@@ -296,7 +312,7 @@ let tr_prog (prog: Kawa.program): program =
         in
         StaticWrite(descr, hd::constr::suite) :: acc
     ) classes_info_in_kawa [] in
-    {name;code;params=[];locals=[]}
+    {name;code;params=[];locals=[];tag=Empty}
   in
 
   (* ***************)
@@ -305,7 +321,7 @@ let tr_prog (prog: Kawa.program): program =
   let mk_main main =
     let name = "main" in
     let code = tr_seq main in
-    {name;code;params=[];locals=["This_alloc_name"]}
+    {name;code;params=[];locals=["This_alloc_name"];tag=Empty}
   in
 
   (* ***********************)

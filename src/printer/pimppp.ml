@@ -20,6 +20,11 @@ let pp_program prog out_channel =
   let margin = ref 0 in
   let print_margin () = for _ = 1 to 2 * !margin do print " " done in
 
+  let tag_to_string = function
+    | Not_Optim -> "Not_Optim"
+    | Empty -> "none"
+  in
+
   let rec pp_instruction = function
     | Putchar (PAscii n) ->
         print "putascii(%d);" n
@@ -66,15 +71,15 @@ let pp_program prog out_channel =
       sprintf "alloc(%s)" (pp_expression e)
   | Binop(op, e1, e2) ->
       sprintf "(%s %s %s)" (pp_expression e1) (pp_binop op) (pp_expression e2)
-  | Call(FName f, args) ->
-      sprintf "%s(%s)" f (pp_args args)
+  | Call(FName f, args, tag) ->
+      sprintf "%s(%s) @<tag:%s>" f (pp_args args) (tag_to_string tag)
   | Seq(seq, e) ->
       List.iter (fun i -> pp_instruction i; print "\n"; print_margin ()) seq;
       pp_expression e
   | Addr s ->
       sprintf "addr(%s)" s
-  | Call(FPointer f, args) ->
-      sprintf "fpointeur:%s(%s)" (pp_expression f) (pp_args args)
+  | Call(FPointer f, args, tag) ->
+      sprintf "fpointeur:%s(%s) @<tag:%s>" (pp_expression f) (pp_args args) (tag_to_string tag)
 
   and pp_args: expression list -> string = function
     | [] -> ""
@@ -97,7 +102,7 @@ let pp_program prog out_channel =
   in
 
   let pp_function fdef =
-    print "function %s(%s) {\n" fdef.name (pp_params fdef.params);
+    print "function %s(%s) @<tag:%s> {\n" fdef.name (pp_params fdef.params) (tag_to_string fdef.tag);
     incr margin;
     pp_vars fdef.locals;
     pp_seq fdef.code;
