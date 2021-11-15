@@ -19,6 +19,8 @@ let tr_prog (prog: Kawa.program): program =
 
   let classes_info_in_kawa = Hashtbl.create 42 in
 
+  let locals = ref [] in
+
   let classes_tbl_find_by_name name =
     let (attr, _), _parent = Hashtbl.find classes_info_in_kawa name in
     List.length attr + 1
@@ -29,8 +31,11 @@ let tr_prog (prog: Kawa.program): program =
   let rec class_of_expr = function
     | Kawa.Cst _ | Kawa.Bool _ | Kawa.Binop _ -> assert false
     | Kawa.(Get (Var x)) ->
-        begin match List.assoc_opt x prog.globals with
-        | Some (Kawa.(Typ_Class s)) -> s
+        if Char.uppercase_ascii x.[0] = x.[0] then
+          x
+        else begin match List.assoc_opt x prog.globals, List.assoc_opt x !locals with
+        | _, Some (Kawa.(Typ_Class s)) -> s
+        | Some (Kawa.(Typ_Class s)), _ -> s
         | _ -> assert false
         end
     | Kawa.This ->
@@ -191,6 +196,7 @@ let tr_prog (prog: Kawa.program): program =
   (* Tradution d'une méthode *)
   (* *************************)
   let tr_method (c: Kawa.class_def) (meth: Kawa.method_def): function_def =
+    locals := meth.params;
     (* concat class name *)
     let name = mk_fun_name c.class_name meth.method_name in
     let code = tr_seq meth.code in

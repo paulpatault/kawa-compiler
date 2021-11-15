@@ -31,11 +31,13 @@ let typ_prog (prog: program): unit =
   let rec class_of_expr e =
     match e.expr_desc with
     | Get (Var x) ->
-        begin try
-          match List.assoc_opt x prog.globals with
-            | Some (Typ_Class s) -> s
-            | _ -> raise (Invalid_argument("todo |- local class"))
-        with _ -> failwith (Printf.sprintf "not implemented |- Get (Var x) |- k2pimp class_of_expr || dans %s ||" !curr_class) end
+        if Char.uppercase_ascii x.[0] = x.[0] then
+          x
+        else begin match List.assoc_opt x prog.globals, List.assoc_opt x !locals with
+          | _, Some (Typ_Class s) -> s
+          | Some (Typ_Class s), _ -> s
+          | _ -> raise (Invalid_argument(""))
+        end
     | This ->
         !curr_class
     | New(class_name, _params) ->
