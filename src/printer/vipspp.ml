@@ -56,9 +56,9 @@ let pp_program prog out_channel =
     | Putchar(Ascii n, l) ->
         print "putascii(%d);     | %s" n l
     | Call(d, FName f, rs, tag, l) ->
-       print "%s <- %s(%s) @<tag:%s>   | %s" d f (pp_args rs) l (pp_tag tag)
+       print "%s <- %s(%s) @<tag:%s>   | %s" d f (pp_args rs) (pp_tag tag) l
     | Call(d, FPointeur f, rs, tag, l) ->
-       print "%s <- _fpointeur_%s(%s) @<tag:%s>   | %s" d f (pp_args rs) l (pp_tag tag)
+       print "%s <- _fpointeur_%s(%s) @<tag:%s>   | %s" d f (pp_args rs) (pp_tag tag) l
     | Return r ->
        print "return %s"            r
     | Write(r1, r2, l) ->

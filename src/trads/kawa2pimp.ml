@@ -142,7 +142,7 @@ let tr_prog (prog: Kawa.program) =
           Call (
             FName (mk_fun_name class_name "constructor"),
             this::params,
-            []
+            [Not_Optim]
           ) in
         (* 4. suite et fin *)
         let seq = [alloc;set;Expr expr2] in

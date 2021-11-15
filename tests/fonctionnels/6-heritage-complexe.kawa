@@ -1,15 +1,18 @@
 var point3d p3d;
 
 class printer {
+
   method void constructor() {}
 
   method void print() {}
 
+  @{not_optim}
   method void space() {
     putchar(' ');
   }
 
 }
+
 class point2d extends printer {
 
   attribute int x;
@@ -24,6 +27,7 @@ class point2d extends printer {
     return this.x + this.y;
   }
 
+  @{not_optim}
   method void print() {
     putchar(this.sum());
     this.space();
@@ -41,6 +45,7 @@ class point3d extends point2d {
     this.z = z;
   }
 
+  @{not_optim}
   method void move(int dx, int dy, int dz) {
     this.x = this.x + dx;
     this.y = this.y + dy;

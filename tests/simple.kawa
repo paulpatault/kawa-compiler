@@ -19,5 +19,3 @@ main {
   A.tagged();   // pas supprimé
   return 0;
 }
-
-
