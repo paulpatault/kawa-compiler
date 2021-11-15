@@ -4,11 +4,12 @@ class A {
 
   method void constructor() { }
 
+  @{static}
   method void untagged() {
     putchar('u');
   }
 
-  @not_optim
+  @{not_optim}
   method void tagged() {
     putchar('t');
   }
@@ -16,9 +17,9 @@ class A {
 }
 
 main {
-  a = new A();
+  /* a = new A();
   a.untagged(); // supprimée
-  a.tagged();   // pas supprimée
+  a.tagged();   // pas supprimée */
   return 0;
 }
 

@@ -8,9 +8,9 @@ type expression =
   | Addr  of string
   | Unop  of unop * expression
   | Binop of binop * expression * expression
-  | Call  of string * expression list * Pimp.tag
+  | Call  of string * expression list * Pimp.tag list
   | Seq   of sequence * expression
-  | CallPointeur of expression * expression list * Pimp.tag
+  | CallPointeur of expression * expression list * Pimp.tag list
 
 and instruction =
   | Putchar of expression

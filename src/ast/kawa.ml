@@ -55,7 +55,7 @@ type method_def = {
     params: (string * typ) list;
     locals: (string * typ) list;
     return: typ;
-    tag: string option;
+    tag: string list;
   }
 
 type class_def = {

@@ -6,6 +6,14 @@ open Utils.List_funcs
 let mk_fun_name s1 s2 = s1 ^ "_" ^ s2
 let mk_descr_name class_name = Printf.sprintf "descr_%s" class_name
 
+let mk_tags = function
+  | [] -> []
+  | l  ->
+      List.map (function
+        | "not_optim" -> Not_Optim
+        | "static" -> Static
+        | _ -> assert false
+      ) l
 
 let tr_prog (prog: Kawa.program): program =
 
@@ -119,7 +127,7 @@ let tr_prog (prog: Kawa.program): program =
           Call (
             FName (mk_fun_name class_name "constructor"),
             this::params,
-            Empty
+            []
           ) in
         (* 4. suite et fin *)
         let seq = [alloc;set;Expr expr2] in
@@ -135,12 +143,11 @@ let tr_prog (prog: Kawa.program): program =
         let class_name = class_of_expr e.expr_desc in
         let (_, meths), _ = Hashtbl.find classes_info_in_kawa class_name in
         let _typ, tag = List.assoc f meths in
-        let tag = match tag with
-        | Some "@not_optim" -> Not_Optim
-        | _ -> Empty
-        in
 
-        Call(FPointer f', e'::params, tag)
+        let tags = mk_tags tag in
+        let params = if List.mem Static tags then params else e'::params in
+
+        Call(FPointer f', params, tags)
   in
 
   (* *****************************)
@@ -191,11 +198,7 @@ let tr_prog (prog: Kawa.program): program =
     (* ajouter un param: instance appellante*)
     let params = "this" :: List.map fst meth.params in
     let locals = "This_alloc_name" :: List.map fst meth.locals in
-    let tag =
-      match meth.tag with
-      | Some _t -> Not_Optim
-      | None -> Empty
-    in
+    let tag = mk_tags meth.tag in
     {name;code;params;locals;tag}
   in
 
@@ -312,7 +315,7 @@ let tr_prog (prog: Kawa.program): program =
         in
         StaticWrite(descr, hd::constr::suite) :: acc
     ) classes_info_in_kawa [] in
-    {name;code;params=[];locals=[];tag=Empty}
+    {name;code;params=[];locals=[];tag=[]}
   in
 
   (* ***************)
@@ -321,7 +324,7 @@ let tr_prog (prog: Kawa.program): program =
   let mk_main main =
     let name = "main" in
     let code = tr_seq main in
-    {name;code;params=[];locals=["This_alloc_name"];tag=Empty}
+    {name;code;params=[];locals=["This_alloc_name"];tag=[]}
   in
 
   (* ***********************)

@@ -224,6 +224,7 @@ let typ_prog (prog: program): unit =
   in
 
   let typ_method c meth =
+    (* TODO: vérifier si m static => this ∉ m *)
     begin if meth.method_name = "constructor" && meth.return <> Typ_Void then
       error (Printf.sprintf
         "Le constructeur de chaque classe doit être de type <void>,

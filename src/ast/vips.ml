@@ -27,7 +27,7 @@ type instr =
   | Putchar      of print_type * label
   | Jump         of label
   | CJump        of register * label * label
-  | Call         of register * func * register list * Pimp.tag * label
+  | Call         of register * func * register list * Pimp.tag list * label
   (* | CallPointeur of register * register * register list * label *)
   | Return       of register
   | Write        of register * register * label

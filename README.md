@@ -70,7 +70,9 @@ Vous y retrouverez :
 - Extension de la syntaxe de Kawa :
   - Ajout des opérateurs : `<=`, `>`, `>=`, `!=`, `&&`, `||`
   - Annotations dans le code : tags (à écrire juste avant une déclaration de méthode)
-    - `@not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels
+    - Syntaxe : `@{tag_name_1, …, tag_name_n}`
+    - Tag `not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels
+    - Tag `static` : todo
 - Interdiction pour les variables de commencer par une majuscule, mais les classes le peuvent.
 
 ## Remarques

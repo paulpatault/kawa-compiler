@@ -19,7 +19,7 @@
 %token LT LE GT GE EQ NEQ
 
 
-%token <string> TAG
+%token TAG
 %token <int> CST
 %token <char> CHAR
 %token <bool> BOOL
@@ -82,15 +82,21 @@ class_def:
     { {class_name; attributes; methods; parent} }
 ;
 
+tags:
+| TAG BEGIN tag=separated_list(COMMA, IDENT) END { tag }
+| { [] }
+;
+
 method_def:
-| tag=option(TAG)
+| tag=tags
   METHOD return=typ method_name=IDENT LPAR params=separated_list(COMMA, typed_ident) RPAR
     BEGIN locals=list(variable_decl) code=list(instruction) END
     { {method_name; code; params; locals; return; tag} }
 ;
 
 mem_access:
-| x=IDENT { Var x }
+| x=IDENT
+    { Var x }
 | e=expression DOT field=IDENT { Field(e, field) }
 ;
 

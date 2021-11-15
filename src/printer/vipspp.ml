@@ -20,11 +20,6 @@ let pp_binop: binop -> string = function
   | And  -> "&&"
   | Or  -> "||"
 
-let tag_to_string = function
-  | Ast.Pimp.Not_Optim -> "Not_Optim"
-  | Ast.Pimp.Empty -> "none"
-
-
 let rec pp_args: string list -> string = function
   | [] -> ""
   | [a] -> a
@@ -33,7 +28,7 @@ let rec pp_args: string list -> string = function
 let pp_program prog out_channel =
   let print s = fprintf out_channel s in
 
-  let pp_instruction = function
+  let rec pp_instruction = function
     | Cst(d, n, l) ->
        print "%s <- %i        | %s" d n l
     | Addr(d, s, l) ->
@@ -61,9 +56,9 @@ let pp_program prog out_channel =
     | Putchar(Ascii n, l) ->
         print "putascii(%d);     | %s" n l
     | Call(d, FName f, rs, tag, l) ->
-       print "%s <- %s(%s) @<tag:%s>   | %s" d f (pp_args rs) l (tag_to_string tag)
+       print "%s <- %s(%s) @<tag:%s>   | %s" d f (pp_args rs) l (pp_tag tag)
     | Call(d, FPointeur f, rs, tag, l) ->
-       print "%s <- _fpointeur_%s(%s) @<tag:%s>   | %s" d f (pp_args rs) l (tag_to_string tag)
+       print "%s <- _fpointeur_%s(%s) @<tag:%s>   | %s" d f (pp_args rs) l (pp_tag tag)
     | Return r ->
        print "return %s"            r
     | Write(r1, r2, l) ->
@@ -71,6 +66,12 @@ let pp_program prog out_channel =
     | StaticWrite(s, sl, l) ->
         let sl = List.fold_left (fun acc si -> acc ^ "," ^ si) "" sl in
         print "staticwrite(%s%s)     | %s" s sl l
+
+  and pp_tag = function
+    | [] -> ""
+    | [Ast.Pimp.Not_Optim] -> "Not_Optim"
+    | [Ast.Pimp.Static]    -> "Static"
+    | a::args -> sprintf "%s, %s" (pp_tag [a]) (pp_tag args)
   in
 
   let pp_var x = print "var %s;\n" x in
