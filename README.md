@@ -72,7 +72,7 @@ Vous y retrouverez :
   - Annotations dans le code : tags (à écrire juste avant une déclaration de méthode)
     - Syntaxe : `@{tag_name_1, …, tag_name_n}`
     - Tag `not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels
-    - Tag `static` : todo
+    - Tag `static` : avec ce tag les fonctions sont considérées comme statiques, elles peuvent donc être appelées par : `ClasseName.staticMethod()`, sans instance de classe.
 - Interdiction pour les variables de commencer par une majuscule, mais les classes le peuvent.
 
 ## Remarques

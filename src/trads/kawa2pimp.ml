@@ -32,35 +32,45 @@ let tr_prog (prog: Kawa.program): program =
     | Kawa.Cst _ | Kawa.Bool _ | Kawa.Binop _ -> assert false
     | Kawa.(Get (Var x)) ->
         if Char.uppercase_ascii x.[0] = x.[0] then
-          x
+          `Classe x
         else begin match List.assoc_opt x prog.globals, List.assoc_opt x !locals with
-        | _, Some (Kawa.(Typ_Class s)) -> s
-        | Some (Kawa.(Typ_Class s)), _ -> s
+        | _, Some (Kawa.(Typ_Class s)) -> `Instance s
+        | Some (Kawa.(Typ_Class s)), _ -> `Instance s
         | _ -> assert false
         end
     | Kawa.This ->
-        !curr_class
+        `Instance !curr_class
     | Kawa.New(class_name, _params) ->
-        class_name
+        `Instance class_name
     | Kawa.(Get (Field(e, x))) ->
-        let c_e = class_of_expr e.expr_desc in
+        let c_e = match class_of_expr e.expr_desc with
+          | `Instance i -> i
+          | _ -> assert false
+        in
         let (attr, _), _parent = Hashtbl.find classes_info_in_kawa c_e in
         begin match List.assoc_opt x attr with
-        | Some (Kawa.(Typ_Class s)) -> s
+        | Some (Kawa.(Typ_Class s)) -> `Instance s
         | _ -> assert false
         end
     | Kawa.MethCall(e, f, _) ->
-        let c_e = class_of_expr e.expr_desc in
+        let c_e = match class_of_expr e.expr_desc with
+          | `Instance i -> i
+          | _ -> assert false
+        in
         let (_, meths), _parent = Hashtbl.find classes_info_in_kawa c_e in
         begin match List.assoc_opt f meths with
-        | Some (Kawa.(Typ_Class s), _tag) -> s
+        | Some (Kawa.(Typ_Class s), _tag) -> `Instance s
         | _ -> assert false
         end
   in
 
   let get_dec expr info =
     try
-      let (attr, meths), _parent = Hashtbl.find classes_info_in_kawa (class_of_expr expr) in
+      let ce = match class_of_expr expr with
+        | `Instance i -> i
+        | _ -> assert false
+      in
+      let (attr, meths), _parent = Hashtbl.find classes_info_in_kawa ce in
       begin match info with
       | `Method name ->
           List.iteri (fun i (name', _) ->
@@ -139,20 +149,24 @@ let tr_prog (prog: Kawa.program): program =
         Seq (seq, Var "This_alloc_name")
 
     | Kawa.MethCall(e, f, params) ->
-        let e' = tr_expr e.expr_desc in
-        let class_descr = Unop(Dec 0, e') in
-        let dec = get_dec e.expr_desc (`Method f) in
-        let f' = Unop(Dec dec, class_descr) in
+
         let params = List.map (fun e -> tr_expr Kawa.(e.expr_desc)) params in
 
-        let class_name = class_of_expr e.expr_desc in
-        let (_, meths), _ = Hashtbl.find classes_info_in_kawa class_name in
+        let classe_name, func, params = match class_of_expr e.expr_desc with
+          | `Instance i ->
+              let e' = tr_expr e.expr_desc in
+              let class_descr = Unop(Dec 0, e') in
+              let dec = get_dec e.expr_desc (`Method f) in
+              let f' = Unop(Dec dec, class_descr) in
+              i, FPointer f', e'::params
+          | `Classe c ->
+              c, FName (mk_fun_name c f), params
+        in
+        let (_, meths), _ = Hashtbl.find classes_info_in_kawa classe_name in
         let _typ, tag = List.assoc f meths in
-
         let tags = mk_tags tag in
-        let params = if List.mem Static tags then params else e'::params in
+        Call(func, params, tags)
 
-        Call(FPointer f', params, tags)
   in
 
   (* *****************************)

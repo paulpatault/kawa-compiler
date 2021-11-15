@@ -32,28 +32,34 @@ let typ_prog (prog: program): unit =
     match e.expr_desc with
     | Get (Var x) ->
         if Char.uppercase_ascii x.[0] = x.[0] then
-          x
+          `Classe x
         else begin match List.assoc_opt x prog.globals, List.assoc_opt x !locals with
-          | _, Some (Typ_Class s) -> s
-          | Some (Typ_Class s), _ -> s
+          | _, Some (Typ_Class s) -> `Instance s
+          | Some (Typ_Class s), _ -> `Instance s
           | _ -> raise (Invalid_argument(""))
         end
     | This ->
-        !curr_class
+        `Instance !curr_class
     | New(class_name, _params) ->
-        class_name
+        `Instance class_name
     | Get (Field(e, x)) ->
-        let c_e = class_of_expr e in
+        let c_e = match class_of_expr e with
+          | `Instance i -> i
+          | _ -> error "TODO msg"
+        in
         let (attr, _), _parent = Hashtbl.find classes_info_in_kawa c_e in
         begin match List.assoc x attr with
-        | Typ_Class s -> s
+        | Typ_Class s -> `Instance s
         | _ -> raise (Invalid_argument("_"))
         end
     | MethCall(e, f, _) ->
-        let c_e = class_of_expr e in
+        let c_e = match class_of_expr e with
+          | `Instance i -> i
+          | _ -> error "TODO msg"
+        in
         let (_, meths), _parent = Hashtbl.find classes_info_in_kawa c_e in
         begin match List.assoc f meths with
-        | Typ_Class s, _params -> s
+        | Typ_Class s, _params -> `Instance s
         | _ -> raise (Invalid_argument("_"))
         end
     | Cst _ | Bool _ | Binop _ -> assert false
@@ -94,7 +100,11 @@ let typ_prog (prog: program): unit =
         typ_params params constr_params (Typ_Class class_name) loc
 
     | MethCall(e, f, params) ->
-        let (_, meth), _ = Hashtbl.find classes_info_in_kawa (class_of_expr e) in
+        let ce = match class_of_expr e with
+          | `Instance i -> i
+          | `Classe m -> m
+        in
+        let (_, meth), _ = Hashtbl.find classes_info_in_kawa ce in
         begin match List.assoc_opt f meth with
         | Some (typ, meth_params) ->
             let params = List.map typ_expr params in
@@ -132,13 +142,16 @@ let typ_prog (prog: program): unit =
           | _ -> error ~loc (Printf.sprintf "La variable <%s> n'existe pas" x)
         end
     | Field(e, x) ->
-        let c = class_of_expr e in
-        let (attr, _), _ = Hashtbl.find classes_info_in_kawa c in
+        let ce = match class_of_expr e with
+          | `Instance i -> i
+          | `Classe _ -> error "msg TODO"
+        in
+        let (attr, _), _ = Hashtbl.find classes_info_in_kawa ce in
         begin match List.assoc_opt x attr with
         | Some t ->
             t
         | None ->
-            error ~loc (Printf.sprintf "La classe <%s> ne possède pas d'attribut <%s>" c x)
+            error ~loc (Printf.sprintf "La classe <%s> ne possède pas d'attribut <%s>" ce x)
         end
   in
 
