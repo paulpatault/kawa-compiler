@@ -51,8 +51,8 @@ rule token = parse
       { keyword_or_ident id }
   | '@'
       { TAG }
-  | "'" (_ as c) "'"
-      { CHAR(c) }
+  | "\"" ([^ '\n']* as s) "\""
+      { STRING(s) }
   | ";"
       { SEMI }
   | "="
@@ -61,6 +61,10 @@ rule token = parse
       { PLUS }
   | "*"
       { STAR }
+  | "/"
+      { DIV }
+  | "-"
+      { MINUS }
   | "&&"
       { AND }
   | "||"

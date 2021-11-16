@@ -9,7 +9,9 @@ let typ_to_string = function
 
 let op_to_string = function
   | Add -> "+"
+  | Sub -> "-"
   | Mul -> "*"
+  | Div -> "/"
   | Lt  -> "<"
   | Le  -> "<="
   | Gt  -> ">"
@@ -71,16 +73,14 @@ let typ_prog ?file (prog: program): unit =
   in
 
   let typ_op = function
-    | Add -> Typ_Int
-    | Mul -> Typ_Int
-    | Lt  -> Typ_Bool
-    | Le  -> Typ_Bool
-    | Gt  -> Typ_Bool
-    | Ge  -> Typ_Bool
-    | Eq  -> Typ_Bool
-    | Neq -> Typ_Bool
-    | And -> Typ_Bool
-    | Or  -> Typ_Bool
+    | Add | Sub
+    | Mul | Div ->
+        Typ_Int
+    | Lt | Le
+    | Gt | Ge
+    | Eq | Neq
+    | And | Or ->
+        Typ_Bool
   in
 
   let rec typ_expr {expr_desc=e;expr_loc=loc} =
@@ -90,7 +90,7 @@ let typ_prog ?file (prog: program): unit =
     | Binop ((Eq|Neq|And|Or), e1, e2) ->
         if typ_expr e1 = typ_expr e2 then Typ_Bool
         else error "" ~loc
-    | Binop ((Add|Mul|Lt|Le|Gt|Ge) as op, e1, e2) ->
+    | Binop ((Add|Sub|Mul|Div|Lt|Le|Gt|Ge) as op, e1, e2) ->
         begin match typ_expr e1, typ_expr e2 with
         | Typ_Int, Typ_Int ->
             typ_op op
@@ -176,7 +176,7 @@ let typ_prog ?file (prog: program): unit =
 
   let rec typ_instr {instr_desc=i;instr_loc=loc} info =
     match i with
-    | Putchar (C _) ->
+    | Putchar (S _) ->
         Typ_Void
     | Putchar (E e) ->
         begin match typ_expr e with
@@ -189,7 +189,6 @@ let typ_prog ?file (prog: program): unit =
     | If(e, b1, b2) ->
         begin match typ_expr e, typ_seq b1 info, typ_seq b2 info with
         | Typ_Bool, Typ_Void, Typ_Void ->
-            Printf.printf "IFF";
             Typ_Void
         | t, Typ_Void, Typ_Void ->
             error ~loc (Printf.sprintf

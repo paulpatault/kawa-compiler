@@ -24,7 +24,7 @@ let def = function
 let use = function
   | Cst(_, _, _)
   | Addr(_, _, _)
-  | Putchar(Ascii _, _)
+  | Putchar(String _, _)
   | Jump _ ->
       S.empty
   | Putchar(Reg r, _)

@@ -10,7 +10,7 @@ type typ =
   | Typ_Bool
   | Typ_Class of string
 
-type binop = Add | Mul | Lt | Le | Gt | Ge | Eq | Neq | And | Or
+type binop = Add | Sub | Mul | Div | Lt | Le | Gt | Ge | Eq | Neq | And | Or
 
 type expr = {
   expr_desc: expr_desc;
@@ -45,7 +45,7 @@ and instr_desc =
 
 and print_type =
   | E of expr
-  | C of char
+  | S of string
 
 and seq = instr list
 

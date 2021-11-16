@@ -3,8 +3,9 @@ open Printf
 
 let pp_binop: binop -> string = function
   | Add -> "+"
-  (* | Sub -> "-" *)
   | Mul -> "*"
+  | Sub -> "-"
+  | Div -> "/"
   | Lt  -> "<"
   | Le  -> "<="
   | Gt  -> ">"
@@ -21,8 +22,8 @@ let pp_program prog out_channel =
   let print_margin () = for _ = 1 to 2 * !margin do print " " done in
 
   let rec pp_instruction = function
-    | Putchar (PAscii n) ->
-        print "putascii(%d);" n
+    | Putchar (PString s) ->
+        print "putchar(%s);" s
     | Putchar (PExpr e) ->
         print "putchar(%s);" (pp_expression e)
     | Set(x, e) ->

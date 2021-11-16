@@ -8,7 +8,7 @@ class printer {
 
   @{not_optim}
   method void space() {
-    putchar(' ');
+    putchar(" ");
   }
 
 }

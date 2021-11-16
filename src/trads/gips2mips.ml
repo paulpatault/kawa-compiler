@@ -51,6 +51,7 @@ let translate_fdef fdef =
         | Add -> add
         | Sub -> sub
         | Mul -> mul
+        | Div -> div
         | Lt  -> slt
         | Le  -> sle
         | Eq  -> seq

@@ -13,6 +13,7 @@ let pp_binop: binop -> string = function
   | Add -> "+"
   | Sub -> "-"
   | Mul -> "*"
+  | Div -> "/"
   | Lt  -> "<"
   | Le  -> "<="
   | Eq  -> "=="
@@ -53,8 +54,8 @@ let pp_program prog out_channel =
        print "jump %s when %s | %s" l1 r l2
     | Putchar(Reg r, l) ->
        print "putchar(%s)     | %s" r l
-    | Putchar(Ascii n, l) ->
-        print "putascii(%d);     | %s" n l
+    | Putchar(String s, l) ->
+        print "putchar(%s);     | %s" s l
     | Call(d, FName f, rs, tag, l) ->
        print "%s <- %s(%s) @<tag:%s>   | %s" d f (pp_args rs) (pp_tag tag) l
     | Call(d, FPointeur f, rs, tag, l) ->

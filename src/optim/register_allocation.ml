@@ -41,7 +41,7 @@ let make_interference_graph fdef =
       | StaticWrite(_, rl, _) ->
           List.iter (fun r -> graph := Graph.add_node r !graph) rl
       | Jump _ -> ()
-      | Putchar (Ascii _, _) -> ()
+      | Putchar (String _, _) -> ()
     ) fdef.code;
 
 

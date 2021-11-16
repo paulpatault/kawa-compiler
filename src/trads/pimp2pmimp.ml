@@ -24,6 +24,7 @@ let rec isel_expr: Pimp.expression -> Pmimp.expression = function
       let e2 = isel_expr e2 in
       begin match op with
       | Pimp.Add -> mk_add e1 e2
+      | Pimp.Sub -> Binop(Sub, e1, e2)
       | Pimp.Mul -> mk_mul e1 e2
       | Pimp.Lt  -> mk_lt e1 e2
       | Pimp.Le  -> mk_le e1 e2
@@ -33,6 +34,7 @@ let rec isel_expr: Pimp.expression -> Pmimp.expression = function
       | Pimp.Neq -> mk_neq e1 e2
       | Pimp.And -> mk_and e1 e2
       | Pimp.Or  -> mk_or e1 e2
+      | Pimp.Div -> Binop(Div, e1, e2)
       end
   | Pimp.Call(Pimp.FName x, el, tag) ->
       let l = List.map (isel_expr) el in
@@ -42,10 +44,10 @@ let rec isel_expr: Pimp.expression -> Pmimp.expression = function
       CallPointeur(isel_expr e, l, tag)
 
 and isel_instr: Pimp.instruction -> Pmimp.instruction = function
-  | Pimp.Putchar (PAscii n) ->
-      Putascii n
+  | Pimp.Putchar (PString s) ->
+      Putchar (PString s)
   | Pimp.Putchar (PExpr e) ->
-      Putchar(isel_expr e)
+      Putchar (PExpr (isel_expr e))
   | Pimp.Set(s, e) ->
       Set(s, isel_expr e)
   | Pimp.If(c, b1, b2) ->

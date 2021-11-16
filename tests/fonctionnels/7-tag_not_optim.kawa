@@ -5,12 +5,12 @@ class A {
   method void constructor() { }
 
   method void untagged() {
-    putchar('u');
+    putchar("u");
   }
 
   @not_optim
   method void tagged() {
-    putchar('t');
+    putchar("t");
   }
 
 }

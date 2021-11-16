@@ -1,7 +1,7 @@
 type tag = Not_Optim | Static
 
 type unop = Read | Alloc | Dec of int
-type binop = Add | Mul | Lt | Le | Gt | Ge | Eq | Neq | And | Or
+type binop = Add | Sub | Mul | Div | Lt | Le | Gt | Ge | Eq | Neq | And | Or
 
 type expression =
   | Cst   of int
@@ -29,7 +29,7 @@ and instruction =
 
 and print_type =
   | PExpr of expression
-  | PAscii of int
+  | PString of string
 
 and sequence = instruction list
 

@@ -90,7 +90,9 @@ let tr_prog (prog: Kawa.program) =
   (* **********************)
   let tr_op = function
     | Kawa.Add -> Add
+    | Kawa.Sub -> Sub
     | Kawa.Mul -> Mul
+    | Kawa.Div -> Div
     | Kawa.Lt  -> Lt
     | Kawa.Le  -> Le
     | Kawa.Gt  -> Gt
@@ -173,8 +175,11 @@ let tr_prog (prog: Kawa.program) =
   (* Tradution d'une instruction *)
   (* *****************************)
   let rec tr_instr = function
-    | Kawa.(Putchar (C c)) ->
-        Putchar (PAscii (Char.code c))
+    | Kawa.(Putchar (S s)) ->
+        Putchar (PString s)
+        (* let l = ref (Obj.magic ()) in
+        String.iter (fun c -> l := Putchar (PAscii (Char.code c)) :: !l) s;
+        List.hd !l *)
 
     | Kawa.(Putchar (E e)) ->
         Putchar(PExpr (tr_expr e.expr_desc))
@@ -210,13 +215,18 @@ let tr_prog (prog: Kawa.program) =
   (* Tradution d'une méthode *)
   (* *************************)
   let tr_method (c: Kawa.class_def) (meth: Kawa.method_def) =
-    locals := meth.params;
+    locals := meth.locals @ meth.params;
     (* concat class name *)
     let name = mk_fun_name c.class_name meth.method_name in
     let code = tr_seq meth.code in
     (* gestion du [this] *)
     (* ajouter un param: instance appellante*)
-    let params = "this" :: List.map fst meth.params in
+
+    let params = List.map fst meth.params in
+    let params =
+      if List.mem "static" meth.tag then params
+      else "this" :: params
+    in
     let locals = "This_alloc_name" :: List.map fst meth.locals in
     let tag = mk_tags meth.tag in
     {name;code;params;locals;tag}

@@ -59,6 +59,7 @@ let translate_fdef f =
           | Pmimp.Lt  -> Lt
           | Pmimp.Le  -> Le
           | Pmimp.Mul -> Mul
+          | Pmimp.Div -> Div
           | Pmimp.Add -> Add
           | Pmimp.Sub -> Sub
           | Pmimp.Eq  -> Eq
@@ -116,12 +117,12 @@ let translate_fdef f =
         Hashtbl.add code ljump (CJump(r, lloop, next));
         le
 
-    | Pmimp.Putascii n ->
+    | Pmimp.Putchar (Pmimp.PString s) ->
         let lput = new_label() in
-        Hashtbl.add code lput (Putchar (Ascii n, next));
+        Hashtbl.add code lput (Putchar (String s, next));
         lput
 
-    | Pmimp.Putchar e ->
+    | Pmimp.Putchar (Pmimp.PExpr e) ->
         let r = new_reg () in
         let lput = new_label() in
         let l = translate_expr r e lput in

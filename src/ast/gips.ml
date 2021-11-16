@@ -8,7 +8,7 @@ type unop  =
   | ShiftL of int
   | Dec    of int
 
-type binop = Add | Sub | Mul | Lt | Le | Eq | Neq | And | Or
+type binop = Add | Sub | Mul | Div | Lt | Le | Eq | Neq | And | Or
 
 type instr =
   | Cst         of register * int * label

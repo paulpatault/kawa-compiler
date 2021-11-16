@@ -1,6 +1,6 @@
 type unop = Addi of int | Subi of int | ShiftL of int | Read | Alloc | Dec of int
 
-type binop = Add | Sub | Mul | Lt | Le | Eq | Neq | And | Or
+type binop = Add | Sub | Mul | Div | Lt | Le | Eq | Neq | And | Or
 
 type expression =
   | Cst   of int
@@ -13,8 +13,7 @@ type expression =
   | CallPointeur of expression * expression list * Pimp.tag list
 
 and instruction =
-  | Putchar of expression
-  | Putascii of int
+  | Putchar of print_type
   | Set     of string * expression
   | If      of expression * sequence * sequence
   | While   of expression * sequence
@@ -22,6 +21,10 @@ and instruction =
   | Expr    of expression
   | Write   of expression * expression
   | StaticWrite of string * string list
+
+and print_type =
+  | PExpr of expression
+  | PString of string
 
 and sequence = instruction list
 

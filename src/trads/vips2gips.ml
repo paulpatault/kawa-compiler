@@ -13,6 +13,7 @@ let tr_unop = function
 
 let tr_binop = function
   | Vips.Add -> Add
+  | Vips.Div -> Div
   | Vips.Sub -> Sub
   | Vips.Mul -> Mul
   | Vips.Lt  -> Lt
@@ -171,13 +172,21 @@ let translate_fdef fdef =
             GetParam(tmp1, s, l)
         end
 
-    | Vips.Putchar(Ascii n, next) ->
+    | Vips.Putchar(String s, next) ->
         let code_putchar = 11 in
-        let l = add_instr (Pop(Mips.a0, next)) in
-        let l = add_instr (Syscall l) in
-        let l = add_instr (Cst(scod, code_putchar, l)) in
-        let l = add_instr (Cst(Mips.a0, n, l)) in
-        Push(Mips.a0, l)
+
+        let l = ref next in
+        let last = ref (Obj.magic ()) in
+        String.iter (fun e ->
+          let n = Char.code e in
+          l := add_instr (Pop(Mips.a0, !l));
+          l := add_instr (Syscall !l);
+          l := add_instr (Cst(scod, code_putchar, !l));
+          l := add_instr (Cst(Mips.a0, n, !l));
+          last := Push(Mips.a0, !l);
+          l := add_instr !last
+        ) (Utils.List_funcs.rev_string s);
+        !last
 
     | Vips.Putchar(Reg r, next) ->
         let code_putchar = 1 in

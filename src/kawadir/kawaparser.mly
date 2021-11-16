@@ -15,15 +15,14 @@
 
 %}
 
-%token PLUS STAR AND OR
+%token PLUS STAR AND OR DIV MINUS
 %token LT LE GT GE EQ NEQ
 
 
 %token TAG
 %token <int> CST
-%token <char> CHAR
 %token <bool> BOOL
-%token <string> IDENT
+%token <string> IDENT STRING
 %token TYP_VOID TYP_INT TYP_BOOL
 %token NEW CLASS EXTENDS METHOD DOT MAIN THIS VAR ATTRIBUTE
 %token LPAR RPAR COMMA BEGIN END SEMI
@@ -31,8 +30,8 @@
 %token EOF
 
 %nonassoc LT LE GT GE EQ NEQ
-%left PLUS OR
-%left STAR AND
+%left PLUS OR MINUS
+%left STAR AND DIV
 %left DOT
 
 %start program
@@ -113,7 +112,7 @@ instruction:
 
 instruction_desc:
 | PUTCHAR LPAR e=expression RPAR SEMI { Putchar(E e) }
-| PUTCHAR LPAR c=CHAR       RPAR SEMI { Putchar(C c) }
+| PUTCHAR LPAR s=STRING RPAR SEMI { Putchar(S s) }
 | a=mem_access SET e=expression SEMI { Set(a, e) }
 | IF LPAR c=expression RPAR
     BEGIN s1=list(instruction) END
@@ -144,7 +143,9 @@ expression_desc:
 
 %inline binop:
 | PLUS { Add }
+| MINUS { Sub }
 | STAR { Mul }
+| DIV  { Div }
 | LT { Lt }
 | LE { Le }
 | GT { Gt }

@@ -13,6 +13,7 @@ let pp_binop: binop -> string = function
   | Add -> "+"
   | Sub -> "-"
   | Mul -> "*"
+  | Div -> "/"
   | Lt  -> "<"
   | Le  -> "<="
   | Eq  -> "=="
