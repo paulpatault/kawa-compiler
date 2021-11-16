@@ -43,10 +43,10 @@ Vous retrouverez donc :
 ## Organisation des tests
 Les tests sont contenus dans le dossier `tests/` et séparé en deux sous dossiers.
 Vous y retrouverez :
-- `fonctionnels/` : contient de nombreux fichiers d'exemple qui sont bien compilé depuis
+- `fonctionnels/` : contient de nombreux fichiers d'exemple qui peuvent être compilés depuis
   le langage `kawa` vers l'assembleur `mips`.
 - `errors/` : contient différents fichiers donnant différents exemples d'erreurs.
-  Aucun de ceux-ci ne passe à la compilation.
+  Aucun de ceux-ci ne passe à la compilation, le comportement attendu est le déclanchement d'une erreur.
 
 ## Travail réalisé
 ### Travail proposé

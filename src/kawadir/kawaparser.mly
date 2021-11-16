@@ -79,7 +79,10 @@ extension:
 class_def:
 | CLASS class_name=IDENT parent=option(extension)
     BEGIN attributes=list(attribute_decl) methods=list(method_def) END
-    { {class_name; attributes; methods; parent} }
+    {
+      let class_loc = mk_loc $startpos $endpos in
+      {class_name; attributes; methods; parent; class_loc}
+    }
 ;
 
 tags:
@@ -91,7 +94,10 @@ method_def:
 | tag=tags
   METHOD return=typ method_name=IDENT LPAR params=separated_list(COMMA, typed_ident) RPAR
     BEGIN locals=list(variable_decl) code=list(instruction) END
-    { {method_name; code; params; locals; return; tag} }
+    {
+      let meth_loc = mk_loc $startpos $endpos in
+      {method_name; code; params; locals; return; tag; meth_loc}
+    }
 ;
 
 mem_access:

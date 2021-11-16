@@ -118,7 +118,7 @@ let typ_prog ?file (prog: program): unit =
         | Some (typ, meth_params) ->
             let params = List.map typ_expr params in
             typ_params params meth_params typ loc
-        | None -> error (Printf.sprintf "La méthode %s n'existe pas" f) ~loc
+        | None -> error (Printf.sprintf "La classe <%s> n'a pas de méthode <%s>" ce f) ~loc
         end
 
   and typ_params l1 l2 ret loc =
@@ -213,7 +213,7 @@ let typ_prog ?file (prog: program): unit =
           Typ_Void
         else
           error ~loc (Printf.sprintf
-            "La fonction %s est de type <%s> mais renvoie un type <%s>"
+            "La fonction <%s> est de type <%s> mais renvoie un type <%s>"
             name (typ_to_string ret) (typ_to_string t))
     | Expr e ->
         typ_expr e
@@ -250,14 +250,14 @@ let typ_prog ?file (prog: program): unit =
   let typ_method c meth =
     (* TODO: vérifier si m static => this ∉ m *)
     begin if meth.method_name = "constructor" && meth.return <> Typ_Void then
-      error (Printf.sprintf
-        "Le constructeur de chaque classe doit être de type <void>,
-        alors que celui de la classe <%s> est de type <%s>" c.class_name (typ_to_string meth.return))
+      error ~loc:meth.meth_loc (Printf.sprintf
+        "Le constructeur de chaque classe doit être de type <void>, alors que celui de la classe <%s> est de type <%s>"
+        c.class_name (typ_to_string meth.return))
     end;
 
     List.iter (fun (x, _typ) ->
       if Char.uppercase_ascii x.[0] = x.[0] then
-        error (Printf.sprintf
+      error ~loc:meth.meth_loc (Printf.sprintf
           "La variable <%s> commence par une majuscule, alors que les noms de variables doivent commencer par une minuscule"
           x);
     ) meth.locals;

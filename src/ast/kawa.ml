@@ -56,6 +56,7 @@ type method_def = {
     locals: (string * typ) list;
     return: typ;
     tag: string list;
+    meth_loc: Loc.position;
   }
 
 type class_def = {
@@ -63,6 +64,7 @@ type class_def = {
     attributes: (string * typ) list;
     methods: method_def list;
     parent: string option;
+    class_loc: Loc.position;
   }
 
 type program = {
