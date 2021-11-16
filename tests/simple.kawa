@@ -1,26 +1,6 @@
-var P4 p4;
+var A a;
 
-class P1 {
-  attribute int x;
-  method void constructor(int x) { this.x = x; }
-}
-
-class P2 {
-  attribute P1 p1;
-  method void constructor(int x) { this.p1 = new P1(x); }
-}
-
-class P3 {
-  attribute P2 p2;
-  method void constructor(int x) { this.p2 = new P2(x); }
-}
-
-class P4 {
-  attribute P3 p3;
-  method void constructor(int x) { this.p3 = new P3(x); }
-}
-
-/* class A {
+class A {
 
   method void constructor() { }
 
@@ -34,12 +14,10 @@ class P4 {
     putchar('t');
   }
 
-} */
+}
 
 main {
-  p4 = new P4(42);
-  putchar(p4.p3.p2.p1.x);
-  /* A.untagged(); // supprimé
-  A.tagged();   // pas supprimé */
+  A.untagged(); // supprimé
+  A.tagged();   // pas supprimé
   return 0;
 }
