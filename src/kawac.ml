@@ -13,7 +13,7 @@ let () =
   let prog = Kawaparser.program Kawalexer.token lb in
   close_in c;
 
-  Kawa_type_checker.typ_prog prog;
+  Kawa_type_checker.typ_prog prog ~file;
   print_endline "[OK] kawa  -> well typed";
 
   (* PIMP *)

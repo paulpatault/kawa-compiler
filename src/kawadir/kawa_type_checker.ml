@@ -1,5 +1,4 @@
 open Ast.Kawa
-open Utils.Loc
 open Utils.List_funcs
 
 let typ_to_string = function
@@ -20,7 +19,9 @@ let op_to_string = function
   | And -> "&&"
   | Or  -> "||"
 
-let typ_prog (prog: program): unit =
+let typ_prog ?file (prog: program): unit =
+
+  let error ?loc str = Utils.Loc.error ?file ?loc str in
 
   let classes_info_in_kawa = Hashtbl.create 42 in
 
@@ -45,7 +46,7 @@ let typ_prog (prog: program): unit =
     | Get (Field(e, x)) ->
         let c_e = match class_of_expr e with
           | `Instance i -> i
-          | _ -> error "TODO msg"
+          | _ -> error "TODO msg" ~loc:e.expr_loc
         in
         let (attr, _), _parent = Hashtbl.find classes_info_in_kawa c_e in
         begin match List.assoc x attr with
@@ -55,7 +56,7 @@ let typ_prog (prog: program): unit =
     | MethCall(e, f, _) ->
         let c_e = match class_of_expr e with
           | `Instance i -> i
-          | _ -> error "TODO msg"
+          | _ -> error "TODO msg" ~loc:e.expr_loc
         in
         let (_, meths), _parent = Hashtbl.find classes_info_in_kawa c_e in
         begin match List.assoc f meths with
@@ -87,17 +88,25 @@ let typ_prog (prog: program): unit =
         else error "" ~loc
     | Binop ((Add|Mul|Lt|Le|Gt|Ge) as op, e1, e2) ->
         begin match typ_expr e1, typ_expr e2 with
-        | Typ_Int, Typ_Int -> typ_op op
-        | _ -> error ~loc (Printf.sprintf "L'opérateur '%s' doit s'appliquer à deux variables de type <int>" (op_to_string op))
+        | Typ_Int, Typ_Int ->
+            typ_op op
+        | _ ->
+            error ~loc (Printf.sprintf
+              "L'opérateur '%s' doit s'appliquer à deux variables de type <int>"
+              (op_to_string op))
         end
     | Get mem_access ->
         typ_mem_access mem_access loc
     | This -> Typ_Class !curr_class
     | New(class_name, params) ->
-        let (_, meths), _ = Hashtbl.find classes_info_in_kawa class_name in
-        let _constr_typ, constr_params = List.assoc "constructor" meths in
-        let params = List.map typ_expr params in
-        typ_params params constr_params (Typ_Class class_name) loc
+        begin try
+          let (_, meths), _ = Hashtbl.find classes_info_in_kawa class_name in
+          let _constr_typ, constr_params = List.assoc "constructor" meths in
+          let params = List.map typ_expr params in
+          typ_params params constr_params (Typ_Class class_name) loc
+        with Not_found ->
+          error ~loc (Printf.sprintf "La classe <%s> n'existe pas" class_name)
+        end
 
     | MethCall(e, f, params) ->
         let ce = match class_of_expr e with
@@ -144,7 +153,7 @@ let typ_prog (prog: program): unit =
     | Field(e, x) ->
         let ce = match class_of_expr e with
           | `Instance i -> i
-          | `Classe _ -> error "msg TODO"
+          | `Classe _ -> error "Les attributs statiques ne sont pas (encore?) implémentés" ~loc
         in
         let (attr, _), _ = Hashtbl.find classes_info_in_kawa ce in
         begin match List.assoc_opt x attr with

@@ -4,7 +4,6 @@ open Mips
 
 exception Brk_fdef of Gips.function_def
 
-
 let translate_fdef fdef =
   let vus = Hashtbl.create 32 in
 
