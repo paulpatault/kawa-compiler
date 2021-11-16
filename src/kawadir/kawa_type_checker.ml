@@ -24,10 +24,9 @@ let typ_prog ?file (prog: program): unit =
   let error ?loc str = Utils.Loc.error ?file ?loc str in
 
   let classes_info_in_kawa = Hashtbl.create 42 in
-
   let locals = ref [] in
-
   let curr_class = ref "" in
+  let curr_meth = ref "" in
 
   let rec class_of_expr e =
     match e.expr_desc with
@@ -40,13 +39,18 @@ let typ_prog ?file (prog: program): unit =
           | _ -> raise (Invalid_argument(""))
         end
     | This ->
-        `Instance !curr_class
+        let (_, meths), _ = Hashtbl.find classes_info_in_kawa !curr_class in
+        let _, _, tags = List.assoc !curr_meth meths in
+        if List.mem "static" tags then
+          error ~loc:e.expr_loc "Les méthodes statiques ne peuvent pas faire appel à <this>"
+        else
+          `Instance !curr_class
     | New(class_name, _params) ->
         `Instance class_name
     | Get (Field(e, x)) ->
         let c_e = match class_of_expr e with
           | `Instance i -> i
-          | _ -> error "TODO msg" ~loc:e.expr_loc
+          | `Classe _ -> error "Les attributs statiques ne sont pas (encore?) implémentés" ~loc:e.expr_loc
         in
         let (attr, _), _parent = Hashtbl.find classes_info_in_kawa c_e in
         begin match List.assoc x attr with
@@ -60,7 +64,7 @@ let typ_prog ?file (prog: program): unit =
         in
         let (_, meths), _parent = Hashtbl.find classes_info_in_kawa c_e in
         begin match List.assoc f meths with
-        | Typ_Class s, _params -> `Instance s
+        | Typ_Class s, _params, _tags -> `Instance s
         | _ -> raise (Invalid_argument("_"))
         end
     | Cst _ | Bool _ | Binop _ -> assert false
@@ -97,11 +101,17 @@ let typ_prog ?file (prog: program): unit =
         end
     | Get mem_access ->
         typ_mem_access mem_access loc
-    | This -> Typ_Class !curr_class
+    | This ->
+        let (_, meths), _ = Hashtbl.find classes_info_in_kawa !curr_class in
+        let _, _, tags = List.assoc !curr_meth meths in
+        if List.mem "static" tags then
+          error ~loc "Les méthodes statiques ne peuvent pas faire appel à <this>"
+        else
+          Typ_Class !curr_class
     | New(class_name, params) ->
         begin try
           let (_, meths), _ = Hashtbl.find classes_info_in_kawa class_name in
-          let _constr_typ, constr_params = List.assoc "constructor" meths in
+          let _constr_typ, constr_params, _tags = List.assoc "constructor" meths in
           let params = List.map typ_expr params in
           typ_params params constr_params (Typ_Class class_name) loc
         with Not_found ->
@@ -115,7 +125,7 @@ let typ_prog ?file (prog: program): unit =
         in
         let (_, meth), _ = Hashtbl.find classes_info_in_kawa ce in
         begin match List.assoc_opt f meth with
-        | Some (typ, meth_params) ->
+        | Some (typ, meth_params, _tags) ->
             let params = List.map typ_expr params in
             typ_params params meth_params typ loc
         | None -> error (Printf.sprintf "La classe <%s> n'a pas de méthode <%s>" ce f) ~loc
@@ -208,7 +218,7 @@ let typ_prog ?file (prog: program): unit =
         end
     | Return e ->
         let t = typ_expr e in
-        let name, ret = info in
+        let name, ret, _tag = info in
         if t = ret then
           Typ_Void
         else
@@ -239,7 +249,7 @@ let typ_prog ?file (prog: program): unit =
           | Typ_Void, _ -> error ~loc "On ne peut rien assigner à un objet de type <void>"
         end
 
-  and typ_seq s info = (* TODO: spec *)
+  and typ_seq s info =
     match s with
     | [] -> Typ_Void
     | e::k ->
@@ -248,7 +258,7 @@ let typ_prog ?file (prog: program): unit =
   in
 
   let typ_method c meth =
-    (* TODO: vérifier si m static => this ∉ m *)
+    curr_meth := meth.method_name;
     begin if meth.method_name = "constructor" && meth.return <> Typ_Void then
       error ~loc:meth.meth_loc (Printf.sprintf
         "Le constructeur de chaque classe doit être de type <void>, alors que celui de la classe <%s> est de type <%s>"
@@ -268,7 +278,8 @@ let typ_prog ?file (prog: program): unit =
         locals := replace_assoc !locals var typ
       else locals := (var, typ) :: !locals
     ) meth.locals;
-    typ_seq meth.code (meth.method_name, meth.return)
+
+    typ_seq meth.code (meth.method_name, meth.return, meth.tag)
   in
 
   let rec find_meth meth classe parent =
@@ -301,10 +312,10 @@ let typ_prog ?file (prog: program): unit =
           let (parent_attr, parent_meths), _ = Hashtbl.find classes_info_in_kawa parent in
 
           let meths = List.fold_left
-            (fun acc {method_name;return;params;_} ->
+            (fun acc {method_name;return;params;tag;_} ->
               if List.mem_assoc method_name acc then
-                replace_assoc acc method_name (return, params)
-              else (method_name, (return, params)) :: acc)
+                replace_assoc acc method_name (return, params, tag)
+              else (method_name, (return, params, tag)) :: acc)
             parent_meths c.methods
           in
 
@@ -320,7 +331,7 @@ let typ_prog ?file (prog: program): unit =
           Hashtbl.add classes_info_in_kawa c.class_name pair
       | None ->
           let meths = List.fold_left
-            (fun acc {method_name;return;params;_} -> (method_name, (return, params)) :: acc)
+            (fun acc {method_name;return;params;tag;_} -> (method_name, (return, params, tag)) :: acc)
             [] c.methods
           in
           let attr = List.fold_left
@@ -346,5 +357,5 @@ let typ_prog ?file (prog: program): unit =
             x
           );
   ) prog.globals;
-  ignore(typ_seq prog.main ("main", Typ_Int));
+  ignore(typ_seq prog.main ("main", Typ_Int, []));
 

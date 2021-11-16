@@ -1,0 +1,18 @@
+var A a;
+
+class A {
+
+  attribute int x;
+
+  method void constructor(int x) { this.x = x; }
+
+  @{static}
+  method int static_meth() {
+    return this.x;
+  }
+}
+
+main {
+  A.static_meth();
+  return 0;
+}
