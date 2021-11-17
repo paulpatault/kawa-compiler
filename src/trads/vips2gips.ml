@@ -177,6 +177,7 @@ let translate_fdef fdef =
 
         let l = ref next in
         let last = ref (Obj.magic ()) in
+
         String.iter (fun e ->
           let n = Char.code e in
           l := add_instr (Pop(Mips.a0, !l));

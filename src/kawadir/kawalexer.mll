@@ -52,7 +52,7 @@ rule token = parse
       { keyword_or_ident id }
   | '@'
       { TAG }
-  | "\"" ([^ '\n']* as s) "\""
+  | "\"" ([^ '\n' '"']* as s) "\""
       { STRING(s) }
   | ";"
       { SEMI }

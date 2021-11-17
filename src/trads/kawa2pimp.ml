@@ -158,27 +158,29 @@ let tr_prog (prog: Kawa.program) =
         let classe_name, func, params = match class_of_expr e.expr_desc with
           | `Instance i ->
               let e' = tr_expr e.expr_desc in
-              let class_descr = Unop(Dec 0, e') in
-              let f = if f = "super" then !curr_meth else f in
-              let dec = get_dec e.expr_desc (`Method f) in
-              let f' = Unop(Dec dec, class_descr) in
-              i, FPointer f', e'::params
+              if f <> "super" then
+                let class_descr = Unop(Dec 0, e') in
+                let dec = get_dec e.expr_desc (`Method f) in
+                let f' = Unop(Dec dec, class_descr) in
+                i, FPointer f', e'::params
+              else
+                begin match snd (Hashtbl.find classes_info_in_kawa i) with
+                | Some p ->
+                    p, FName (mk_fun_name p !curr_meth), e'::params
+                | None -> assert false
+                end
           | `Classe c ->
               c, FName (mk_fun_name c f), params
         in
 
-        let classe_name, f =
-          if f <> "super" then classe_name, f
-          else
-            begin match snd (Hashtbl.find classes_info_in_kawa classe_name) with
-            | Some p ->
-                p, !curr_meth
-            | None -> assert false
-            end
+        let _typ, tag =
+          let (_, meths), _ = Hashtbl.find classes_info_in_kawa classe_name in
+          if f <> "super" then
+            List.assoc f meths
+          else begin
+            List.assoc !curr_meth meths
+          end
         in
-
-        let (_, meths), _ = Hashtbl.find classes_info_in_kawa classe_name in
-        let _typ, tag = List.assoc f meths in
         let tags = mk_tags tag in
         Call(func, params, tags)
 
@@ -188,41 +190,42 @@ let tr_prog (prog: Kawa.program) =
   (* Tradution d'une instruction *)
   (* *****************************)
   let rec tr_instr = function
-    | Kawa.(Putchar (S s)) ->
-        Putchar (PString s)
-        (* let l = ref (Obj.magic ()) in
-        String.iter (fun c -> l := Putchar (PAscii (Char.code c)) :: !l) s;
-        List.hd !l *)
-
-    | Kawa.(Putchar (E e)) ->
-        Putchar(PExpr (tr_expr e.expr_desc))
-
+    | Kawa.(Putchar l) ->
+        List.map (function
+            Kawa.S s ->
+              Putchar (PString s)
+          | Kawa.E e ->
+              Putchar(PExpr (tr_expr e.expr_desc))
+        ) l
     | Kawa.If(e, b1, b2) ->
-        If(tr_expr e.expr_desc, tr_seq b1, tr_seq b2)
+        [If(tr_expr e.expr_desc, tr_seq b1, tr_seq b2)]
 
     | Kawa.While(e, b) ->
-        While(tr_expr e.expr_desc, tr_seq b)
+        [While(tr_expr e.expr_desc, tr_seq b)]
 
     | Kawa.Return e ->
-        Return(tr_expr e.expr_desc)
+        [Return(tr_expr e.expr_desc)]
 
     | Kawa.Expr e ->
-        Expr(tr_expr e.expr_desc)
+        [Expr(tr_expr e.expr_desc)]
 
     | Kawa.Set(Var x, e) ->
-        Set(x, tr_expr e.expr_desc)
+        [Set(x, tr_expr e.expr_desc)]
 
     | Kawa.Set(Field(e1, x), e2) ->
         let var = tr_expr e1.expr_desc in
         let e = tr_expr e2.expr_desc in
         let dec = get_dec e1.expr_desc (`Attribut x) in
         let addr = Binop(Add, var, Cst dec) in
-        Write(addr, e)
+        [Write(addr, e)]
 
   (* **************************)
   (* Tradution d'une sequence *)
   (* **************************)
-  and tr_seq s = List.map (fun i -> tr_instr Kawa.(i.instr_desc)) s in
+  and tr_seq s =
+    let l = List.map (fun i -> tr_instr Kawa.(i.instr_desc)) s in
+    List.flatten l
+  in
 
   (* *************************)
   (* Tradution d'une méthode *)

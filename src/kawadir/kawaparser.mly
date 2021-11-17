@@ -110,9 +110,13 @@ instruction:
    { mk_instr (mk_loc $startpos $endpos) i }
 ;
 
+print_typ:
+| e=expression { E e }
+| s=STRING { S s }
+;
+
 instruction_desc:
-| PUTCHAR LPAR e=expression RPAR SEMI { Putchar(E e) }
-| PUTCHAR LPAR s=STRING RPAR SEMI { Putchar(S s) }
+| PUTCHAR LPAR l=separated_list(COMMA, print_typ) RPAR SEMI { Putchar(l) }
 | a=mem_access SET e=expression SEMI { Set(a, e) }
 | IF LPAR c=expression RPAR
     BEGIN s1=list(instruction) END

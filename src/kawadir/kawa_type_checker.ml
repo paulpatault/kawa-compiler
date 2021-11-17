@@ -187,16 +187,19 @@ let typ_prog ?file (prog: program): unit =
 
   let rec typ_instr {instr_desc=i;instr_loc=loc} info =
     match i with
-    | Putchar (S _) ->
+    | Putchar l ->
+        List.iter (function
+            S _ -> ()
+          | E e ->
+            begin match typ_expr e with
+            | Typ_Int | Typ_Bool -> ()
+            | t ->
+                error ~loc (Printf.sprintf
+                  "Le paramètre de putchar est de type <%s> alors qu'il devrait être de type <int> ou <bool>"
+                  (typ_to_string t))
+            end
+        ) l;
         Typ_Void
-    | Putchar (E e) ->
-        begin match typ_expr e with
-        | Typ_Int | Typ_Bool -> Typ_Void
-        | t ->
-            error ~loc (Printf.sprintf
-              "Le paramètre de putchar est de type <%s> alors qu'il devrait être de type <int> ou <bool>"
-              (typ_to_string t))
-        end
     | If(e, b1, b2) ->
         begin match typ_expr e, typ_seq b1 info, typ_seq b2 info with
         | Typ_Bool, Typ_Void, Typ_Void ->

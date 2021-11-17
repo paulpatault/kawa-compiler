@@ -36,12 +36,12 @@ type instr = {
 }
 
 and instr_desc =
-  | Putchar  of print_type
-  | If     of expr * seq * seq
-  | While  of expr * seq
-  | Return of expr
-  | Expr   of expr
-  | Set    of mem_access * expr
+  | Putchar of print_type list
+  | If      of expr * seq * seq
+  | While   of expr * seq
+  | Return  of expr
+  | Expr    of expr
+  | Set     of mem_access * expr
 
 and print_type =
   | E of expr
