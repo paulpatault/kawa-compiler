@@ -187,7 +187,31 @@ let typ_prog ?file (prog: program): unit =
 
   let rec typ_instr {instr_desc=i;instr_loc=loc} info =
     match i with
-    | Printf _ -> Typ_Void
+    | Printf (s, params) ->
+        let sl = String.split_on_char '%' s in
+        let init = ref false in
+        List.iteri (fun i s ->
+          if !init then begin
+            if s.[0] == 'd' then
+              match List.nth_opt params (i - 1) with
+              | Some (E _) -> ()
+              | Some _ -> error ~loc (Printf.sprintf "Le %d-ième paramètre de printf devrait être de type <int/bool>" (i+1))
+              | None ->
+                  error ~loc "Il n'y a pas assez de paramètres dans l'appel à <printf> par rapport au nombre de %..."
+            else if s.[0] == 's' then
+              match List.nth_opt params (i - 1) with
+              | Some (S _) ->
+                  ()
+              | Some _ -> error ~loc (Printf.sprintf "Le %d-ième paramètre de printf devrait être de type <string>" (i+1))
+              | None ->
+                  error ~loc "Il n'y a pas assez de paramètres dans l'appel à <printf> par rapport au nombre de %..."
+            else
+              error ~loc
+                ("Il n'y a que 3 types possibles dans les printf : <int/bool :"
+                  ^ "%" ^ "d> et <string: "^"%"^"s>")
+          end else init := true
+        ) sl;
+        Typ_Void
     | Putchar l ->
         List.iter (function
             S _ -> ()
