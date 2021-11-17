@@ -35,22 +35,23 @@ Compilateur optimisant du langage Kawa (langage objet type Java) vers l'assemble
     ```
 
 ## Organisation du code
-Le code est contenu dans le dossier `src/` et séparé en nombreux sous dossiers.
+Le code est contenu dans le dossier [`src/`](./src) et séparé en nombreux sous dossiers.
 Vous retrouverez donc :
-- `ast/` : contient l'ensemble des fichiers `kawa.ml`, `pimp.ml`, ...
-- `kawadir/` : contient le lexer, parser et type\_checker pour un fichier `.kawa`.
-- `optim/` : contient les fichiers utiles pour le phase de compilation optimisée.
-- `printer/` : contient les pretty-printers de chaque `ast`.
-- `trads/` : contient les fichiers `kawa2pimp.ml`, plus généralement tous les `x2y.ml`.
-- `utils/` : contient des fichiers implémentant un certain nombre de fonctions/exceptions/...
+- [`ast/`](./src/ast) : contient l'ensemble des fichiers [`kawa.ml`](./src/ast/kawa.ml), [`pimp.ml`](./src/ast/pimp.ml), etc.
+- [`kawadir/`](./src/kawadir) : contient le lexer, parser et type\_checker pour un fichier `.kawa`.
+- [`optim/`](./src/optim) : contient les fichiers utiles pour le phase de compilation optimisée.
+- [`printer/`](./src/printer) : contient les pretty-printers de chaque `ast`.
+- [`trads/`](./src/trads) : contient les fichiers `<alpha>2<beta>.ml`, où `<alpha>` et `<beta>` sont deux
+  langages internes de internes de notre compilateur.
+- [`utils/`](./src/utils) : contient des fichiers implémentant un certain nombre de fonctions/exceptions/...
   utiles pour l'ensemble du projet.
 
 ## Organisation des tests
-Les tests sont contenus dans le dossier `tests/` et séparé en deux sous dossiers.
+Les tests sont contenus dans le dossier [`tests/`](./tests) et séparé en deux sous dossiers.
 Vous y retrouverez :
-- `fonctionnels/` : contient de nombreux fichiers d'exemple qui peuvent être compilés depuis
+- [`fonctionnels/`](./tests/fonctionnels) : contient de nombreux fichiers d'exemple qui peuvent être compilés depuis
   le langage `kawa` vers l'assembleur `mips`.
-- `errors/` : contient différents fichiers donnant différents exemples d'erreurs.
+- [`errors/`](./tests/errors) : contient différents fichiers donnant différents exemples d'erreurs.
   Aucun de ceux-ci ne passe à la compilation, le comportement attendu est le déclanchement
   d'une erreur.
 
@@ -65,7 +66,7 @@ Vous y retrouverez :
   - extension des méthodes : ...
   - surcharches des méthodes : ...
 - Vérification du typage avant la compilation :
-  - Vous retrouverez l'appel à `Kawa.type_checker.typ_prog` dans le main de `kawac.ml`.
+  - Vous retrouverez l'appel à `Kawa.type_checker.typ_prog` dans le fichier "main" [`kawac.ml`](./src/kawac.ml).
   Cette procédure à pour fonction de vérifier le bon typage et la cohérence du programme `kawa`.
   Ainsi, si le programme est incohérent ou mal typé, une exception accompagnée un message d'erreur
   précis indiquant la cause de l'erreur ainsi que sa localisation dans le code.
@@ -82,7 +83,8 @@ Vous y retrouverez :
     - Tag `not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels.
     - Tag `static` : avec ce tag les fonctions sont considérées comme statiques, elles peuvent donc être appelées par : `ClasseName.staticMethod()`, sans instance de classe.
 - Interdiction pour les variables de commencer par une majuscule, mais les classes le peuvent.
-- Reconnaissance des fonctions pures les autres seront marquées automatiquement du tag `not_optim`.
+- Reconnaissance des fonctions pures les autres seront marquées automatiquement du tag `not_optim`
+  dans l'analyse réalisée par le fichier [`kawa_annot.ml`](./src/kawadir/kawa_annot.ml).
   Cela permet à l'utilisateur de ne pas annoter lui même toutes les fonctions ayant des effets de bord.
 - Ajout de la fonction `printf()`, qui prend en arguments un string, suivi d'un certain nombre de
   d'expression de type `int` ou de strings. Exemples :
