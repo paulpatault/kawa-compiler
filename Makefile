@@ -5,14 +5,14 @@ compile:
 ifdef file
 	@dune exec src/kawac.exe $(file)
 else
-	@echo 'file is not defined'
+	@echo 'Il faut appeler cette commande avec un argument: make compile file=<fichier>.kawa'
 endif
 
 run:
 ifdef file
 	java -jar Mars4_5.jar $(file)
 else
-	@echo 'file is not defined'
+	@echo 'Il faut appeler cette commande avec un argument: make compile file=<fichier>.asm'
 endif
 
 clean:

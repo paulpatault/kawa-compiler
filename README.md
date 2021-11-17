@@ -2,6 +2,11 @@
 
 Compilateur optimisant du langage Kawa (langage objet type Java) vers l'assembleur MIPS.
 
+## Dépendances
+
+- [Dune](https://dune.build) : installation avec `opam install dune`
+- [Menhir](http://gallium.inria.fr/~fpottier/menhir/) : installation avec `opam install menhir`
+
 ## Usage
 
 + Installation :
@@ -52,7 +57,7 @@ Vous y retrouverez :
 ### Travail proposé
 - Compilation des classes :
   - Les descripteurs sont enregistrés statiquement dans `.data`.
-  - Les objets sont alloués sur le tas.
+  - Les objets sont alloués dynamiquement sur le tas.
 - Gestion de l'héritage :
   - héritage simple : ...
   - extension des attributs : ...
@@ -65,8 +70,7 @@ Vous y retrouverez :
   précis indiquant la cause de l'erreur ainsi que sa localisation dans le code.
 
 ### Modifications personnels
-- Ajout de la possibilité d'imprimer des caratères (attention : il ne s'agit pas de strings)
-  avec la procédure `putchar('c')`.
+- Ajout de la possibilité d'imprimer des strings avec la procédure `putchar("Hello World !")`.
 - Extension de la syntaxe de Kawa :
   - Ajout des opérateurs : `<=`, `>`, `>=`, `!=`, `&&`, `||`
   - Annotations dans le code : tags (à écrire juste avant une déclaration de méthode)
@@ -79,6 +83,3 @@ Vous y retrouverez :
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.
-- Les effets de bords ne sont pas "reconnus" par le calcul de liveness. J'ai du retirer le cas `Call`
-  dans le fichier `optim/deadwriteelimination.ml` car ce cas effaçait certains appels de méthodes
-  en trop.
