@@ -123,6 +123,19 @@ let typ_prog ?file (prog: program): unit =
           | `Instance i -> i
           | `Classe m -> m
         in
+        let ce, f =
+          if f <> "super" then
+            ce, f
+          else
+            assert false;
+            (* begin match snd (Hashtbl.find classes_info_in_kawa ce) with
+            | Some p -> p, !curr_meth
+            | None ->
+                error ~loc (Printf.sprintf
+                  "Il n'est pas possible d'appeler la méthode <super> dans la classe <%s> car celle-ci n'a pas de classe mère" ce)
+            end *)
+        in
+
         let (_, meth), _ = Hashtbl.find classes_info_in_kawa ce in
         begin match List.assoc_opt f meth with
         | Some (typ, meth_params, _tags) ->

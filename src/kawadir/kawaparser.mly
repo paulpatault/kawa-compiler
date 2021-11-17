@@ -24,7 +24,7 @@
 %token <bool> BOOL
 %token <string> IDENT STRING
 %token TYP_VOID TYP_INT TYP_BOOL
-%token NEW CLASS EXTENDS METHOD DOT MAIN THIS VAR ATTRIBUTE
+%token NEW CLASS EXTENDS METHOD DOT MAIN THIS VAR ATTRIBUTE SUPER
 %token LPAR RPAR COMMA BEGIN END SEMI
 %token PUTCHAR SET IF ELSE WHILE RETURN
 %token EOF
@@ -139,6 +139,8 @@ expression_desc:
    { New(class_name, params) }
 | e=expression DOT m=IDENT LPAR params=separated_list(COMMA, expression) RPAR
    { MethCall(e, m, params) }
+| SUPER LPAR params=separated_list(COMMA, expression) RPAR
+   { MethCall(mk_expr (mk_loc $startpos $endpos) This, "super", params) }
 ;
 
 %inline binop:

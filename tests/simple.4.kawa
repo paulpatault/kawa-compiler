@@ -22,16 +22,21 @@ class point3d extends point2d {
   attribute int z;
 
   method void constructor(int px, int py, int pz) {
-    this.x = px;
-    this.y = py;
+    super(px, py);
+    /* this.x = px;
+    this.y = py; */
     this.z = pz;
   }
 
 }
 
 main {
-  p2d = new point2d(4, 2);
+  /* p2d = new point2d(4, 2); */
   p3d = new point3d(1, 2, 3);
-  putchar(p3d.sum());
+  putchar(p3d.x);
+  putchar(" ");
+  putchar(p3d.y);
+  putchar(" ");
+  putchar(p3d.z);
   return 0;
 }

@@ -27,6 +27,7 @@ let tr_prog (prog: Kawa.program) =
   in
 
   let curr_class = ref "" in
+  let curr_meth = ref "" in
 
   let rec class_of_expr = function
     | Kawa.Cst _ | Kawa.Bool _ | Kawa.Binop _ -> assert false
@@ -158,6 +159,7 @@ let tr_prog (prog: Kawa.program) =
           | `Instance i ->
               let e' = tr_expr e.expr_desc in
               let class_descr = Unop(Dec 0, e') in
+              let f = if f = "super" then !curr_meth else f in
               let dec = get_dec e.expr_desc (`Method f) in
               let f' = Unop(Dec dec, class_descr) in
               i, FPointer f', e'::params
@@ -215,6 +217,7 @@ let tr_prog (prog: Kawa.program) =
   (* Tradution d'une méthode *)
   (* *************************)
   let tr_method (c: Kawa.class_def) (meth: Kawa.method_def) =
+    curr_meth := meth.method_name;
     locals := meth.locals @ meth.params;
     (* concat class name *)
     let name = mk_fun_name c.class_name meth.method_name in

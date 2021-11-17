@@ -17,6 +17,7 @@
         "bool",     TYP_BOOL;
         "void",     TYP_VOID;
         "class",    CLASS;
+        "super",    SUPER;
         "extends",  EXTENDS;
         "new",      NEW;
         "this",     THIS;
