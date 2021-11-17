@@ -51,7 +51,8 @@ Vous y retrouverez :
 - `fonctionnels/` : contient de nombreux fichiers d'exemple qui peuvent être compilés depuis
   le langage `kawa` vers l'assembleur `mips`.
 - `errors/` : contient différents fichiers donnant différents exemples d'erreurs.
-  Aucun de ceux-ci ne passe à la compilation, le comportement attendu est le déclanchement d'une erreur.
+  Aucun de ceux-ci ne passe à la compilation, le comportement attendu est le déclanchement
+  d'une erreur.
 
 ## Travail réalisé
 ### Travail proposé
@@ -70,21 +71,24 @@ Vous y retrouverez :
   précis indiquant la cause de l'erreur ainsi que sa localisation dans le code.
 
 ### Modifications personnels
-- Ajout de la possibilité d'imprimer des strings avec la procédure `putchar("Hello World !")`.
+- Extension `putchar`:
+  - Ajout de la possibilité d'imprimer des strings avec la procédure `putchar("Hello World !")`.
+  - `putchar` peut prendre autant un grand nombre de paramètres, autant que l'on veut. C'est à dire
+  que l'on peut faire par exemple `putchar("a=", a, ", b=", b)`.
 - Extension de la syntaxe de Kawa :
   - Ajout des opérateurs : `<=`, `>`, `>=`, `!=`, `&&`, `||`
   - Annotations dans le code : tags (à écrire juste avant une déclaration de méthode)
-    - Syntaxe : `@{tag_name_1, …, tag_name_n}`
-    - Tag `not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels
+    - Syntaxe : `@{tag_name_1, …, tag_name_n}`.
+    - Tag `not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels.
     - Tag `static` : avec ce tag les fonctions sont considérées comme statiques, elles peuvent donc être appelées par : `ClasseName.staticMethod()`, sans instance de classe.
 - Interdiction pour les variables de commencer par une majuscule, mais les classes le peuvent.
 - Reconnaissance des fonctions pures les autres seront marquées automatiquement du tag `not_optim`.
   Cela permet à l'utilisateur de ne pas annoter lui même toutes les fonctions ayant des effets de bord.
 - Ajout de la fonction `printf()`, qui prend en arguments un string, suivi d'un certain nombre de
   d'expression de type `int` ou de strings. Exemples :
-    - `printf("a=%d", a)`, si a est une variable de type int
-    - `printf("a=%d, b=%d", a, b)`, si `ba` et `b` sont des variables de type int
-    - `printf("a=%d, b=%s", a, "coucou")`, si a est une variable de type int
+    - `printf("a=%d", a)`, si a est une variable de type int.
+    - `printf("a=%d, b=%d", a, b)`, si `a` et `b` sont des variables de type int.
+    - `printf("a=%d, b=%s", a, "coucou")`, si a est une variable de type int.
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.
