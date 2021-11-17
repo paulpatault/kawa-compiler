@@ -72,3 +72,30 @@ type program = {
     globals: (string * typ) list;
     main: seq;
   }
+
+let mk_prog ?classes ?globals ?main prog =
+  {
+    classes = Option.value classes ~default:prog.classes;
+    globals = Option.value globals ~default:prog.globals;
+    main    = Option.value main    ~default:prog.main;
+  }
+
+let mk_class_def ?class_name ?attributes ?methods ?parent ?class_loc classe =
+  {
+    class_name = Option.value class_name ~default:classe.class_name;
+    attributes = Option.value attributes ~default:classe.attributes;
+    methods    = Option.value methods    ~default:classe.methods;
+    parent     = Option.value parent     ~default:classe.parent;
+    class_loc  = Option.value class_loc  ~default:classe.class_loc;
+  }
+
+let mk_meth_def ?method_name ?code ?params ?locals ?return ?tag ?meth_loc meth =
+  {
+    method_name = Option.value method_name ~default:meth.method_name;
+    code        = Option.value code        ~default:meth.code;
+    params      = Option.value params      ~default:meth.params;
+    locals      = Option.value locals      ~default:meth.locals;
+    return      = Option.value return      ~default:meth.return;
+    tag         = Option.value tag         ~default:meth.tag;
+    meth_loc    = Option.value meth_loc    ~default:meth.meth_loc;
+  }

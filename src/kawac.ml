@@ -16,8 +16,10 @@ let () =
   Kawa_type_checker.typ_prog prog ~file;
   print_endline "[OK] kawa  -> well typed";
 
+  let prog_annoted = Kawa_annot.annot_prog prog in
+
   (* PIMP *)
-  let pimp = Kawa2pimp.tr_prog prog in
+  let pimp = Kawa2pimp.tr_prog prog_annoted in
   let output_file = (Filename.chop_suffix file ".kawa") ^ ".pimp" in
   let out = open_out output_file in
   Pimppp.pp_program pimp out;

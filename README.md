@@ -74,6 +74,8 @@ Vous y retrouverez :
     - Tag `not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels
     - Tag `static` : avec ce tag les fonctions sont considérées comme statiques, elles peuvent donc être appelées par : `ClasseName.staticMethod()`, sans instance de classe.
 - Interdiction pour les variables de commencer par une majuscule, mais les classes le peuvent.
+- Reconnaissance des fonctions pures les autres seront marquées automatiquement du tag `not_optim`.
+  Cela permet à l'utilisateur de ne pas annoter lui même toutes les fonctions ayant des effets de bord.
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.
