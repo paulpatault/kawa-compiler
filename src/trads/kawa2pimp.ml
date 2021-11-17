@@ -166,6 +166,17 @@ let tr_prog (prog: Kawa.program) =
           | `Classe c ->
               c, FName (mk_fun_name c f), params
         in
+
+        let classe_name, f =
+          if f <> "super" then classe_name, f
+          else
+            begin match snd (Hashtbl.find classes_info_in_kawa classe_name) with
+            | Some p ->
+                p, !curr_meth
+            | None -> assert false
+            end
+        in
+
         let (_, meths), _ = Hashtbl.find classes_info_in_kawa classe_name in
         let _typ, tag = List.assoc f meths in
         let tags = mk_tags tag in

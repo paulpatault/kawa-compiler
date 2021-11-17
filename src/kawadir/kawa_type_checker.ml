@@ -74,13 +74,11 @@ let typ_prog ?file (prog: program): unit =
 
   let typ_op = function
     | Add | Sub
-    | Mul | Div ->
-        Typ_Int
+    | Mul | Div -> Typ_Int
     | Lt | Le
     | Gt | Ge
     | Eq | Neq
-    | And | Or ->
-        Typ_Bool
+    | And | Or -> Typ_Bool
   in
 
   let rec typ_expr {expr_desc=e;expr_loc=loc} =
@@ -127,13 +125,13 @@ let typ_prog ?file (prog: program): unit =
           if f <> "super" then
             ce, f
           else
-            assert false;
-            (* begin match snd (Hashtbl.find classes_info_in_kawa ce) with
-            | Some p -> p, !curr_meth
+            begin match snd (Hashtbl.find classes_info_in_kawa ce) with
+            | Some p ->
+                p, !curr_meth
             | None ->
                 error ~loc (Printf.sprintf
                   "Il n'est pas possible d'appeler la méthode <super> dans la classe <%s> car celle-ci n'a pas de classe mère" ce)
-            end *)
+            end
         in
 
         let (_, meth), _ = Hashtbl.find classes_info_in_kawa ce in
