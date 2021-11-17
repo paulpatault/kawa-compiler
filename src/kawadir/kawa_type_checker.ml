@@ -187,6 +187,7 @@ let typ_prog ?file (prog: program): unit =
 
   let rec typ_instr {instr_desc=i;instr_loc=loc} info =
     match i with
+    | Printf _ -> Typ_Void
     | Putchar l ->
         List.iter (function
             S _ -> ()

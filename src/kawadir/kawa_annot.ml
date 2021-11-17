@@ -16,7 +16,8 @@ let annot_prog (prog: program): program =
 
   let rec pure_instr {instr_desc=i;_} =
     match i with
-    | Putchar _ -> false
+    | Printf _
+    | Putchar _
     | Set _ -> false
     | If(e, b1, b2) ->
         is_pure_expr e && is_pure_seq b1 && is_pure_seq b2

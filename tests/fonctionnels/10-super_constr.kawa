@@ -1,0 +1,33 @@
+var point3d p3d;
+
+class point2d {
+
+  attribute int x;
+  attribute int y;
+
+  method void constructor(int px, int py) {
+    this.x = px;
+    this.y = py;
+  }
+}
+
+class point3d extends point2d {
+
+  attribute int z;
+
+  method void constructor(int px, int py, int pz) {
+    super(px, py);
+    this.z = pz;
+  }
+
+  method void print() {
+    printf("x=%d, y=%s, z=%d", p3d.x, "p3d.y", p3d.z);
+  }
+}
+
+main {
+  p3d = new point3d(1, 2, 3);
+  p3d.print();
+  return 0;
+}
+

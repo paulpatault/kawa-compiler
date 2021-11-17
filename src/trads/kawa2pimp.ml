@@ -190,6 +190,32 @@ let tr_prog (prog: Kawa.program) =
   (* Tradution d'une instruction *)
   (* *****************************)
   let rec tr_instr = function
+    | Kawa.Printf (s, params) ->
+        let sl = String.split_on_char '%' s in
+        let init = ref false in
+        let lres = if s.[0] = '%' then (
+            init := true;
+            ref []
+        ) else ref [Putchar (PString (List.hd sl))]
+        in
+        List.iteri (fun i s ->
+          if !init then begin
+            let s' = String.sub s 1 (String.length s - 1) in
+            if s.[0] == 'd' then
+              match List.nth params (i - 1) with
+              | Kawa.E e ->
+                  lres := Putchar (PString s') :: Putchar (PExpr (tr_expr e.expr_desc)) :: !lres;
+              | _ -> assert false
+            else if s.[0] == 's' then
+              match List.nth params (i - 1) with
+              | Kawa.S ss ->
+                  lres := Putchar (PString (ss ^ s')) :: !lres;
+              | _ -> assert false
+            else
+              assert false
+          end else (init := true; lres := [Putchar (PString s)])
+        ) sl;
+        List.rev !lres
     | Kawa.(Putchar l) ->
         List.map (function
             Kawa.S s ->

@@ -37,6 +37,7 @@ type instr = {
 
 and instr_desc =
   | Putchar of print_type list
+  | Printf  of string * print_type list
   | If      of expr * seq * seq
   | While   of expr * seq
   | Return  of expr

@@ -80,6 +80,11 @@ Vous y retrouverez :
 - Interdiction pour les variables de commencer par une majuscule, mais les classes le peuvent.
 - Reconnaissance des fonctions pures les autres seront marquées automatiquement du tag `not_optim`.
   Cela permet à l'utilisateur de ne pas annoter lui même toutes les fonctions ayant des effets de bord.
+- Ajout de la fonction `printf()`, qui prend en arguments un string, suivi d'un certain nombre de
+  d'expression de type `int` ou de strings. Exemples :
+    - `printf("a=%d", a)`, si a est une variable de type int
+    - `printf("a=%d, b=%d", a, b)`, si `ba` et `b` sont des variables de type int
+    - `printf("a=%d, b=%s", a, "coucou")`, si a est une variable de type int
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.

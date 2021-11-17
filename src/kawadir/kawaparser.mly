@@ -26,7 +26,7 @@
 %token TYP_VOID TYP_INT TYP_BOOL
 %token NEW CLASS EXTENDS METHOD DOT MAIN THIS VAR ATTRIBUTE SUPER
 %token LPAR RPAR COMMA BEGIN END SEMI
-%token PUTCHAR SET IF ELSE WHILE RETURN
+%token PUTCHAR PRINTF SET IF ELSE WHILE RETURN
 %token EOF
 
 %nonassoc LT LE GT GE EQ NEQ
@@ -117,6 +117,7 @@ print_typ:
 
 instruction_desc:
 | PUTCHAR LPAR l=separated_list(COMMA, print_typ) RPAR SEMI { Putchar(l) }
+| PRINTF  LPAR s=STRING COMMA l=separated_list(COMMA, print_typ) RPAR SEMI { Printf(s, l) }
 | a=mem_access SET e=expression SEMI { Set(a, e) }
 | IF LPAR c=expression RPAR
     BEGIN s1=list(instruction) END
