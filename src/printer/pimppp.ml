@@ -23,7 +23,7 @@ let pp_program prog out_channel =
 
   let rec pp_instruction = function
     | Putchar (PString s) ->
-        print "putchar(%s);" s
+        print "putchar(\"%s\");" s
     | Putchar (PExpr e) ->
         print "putchar(%s);" (pp_expression e)
     | Set(x, e) ->

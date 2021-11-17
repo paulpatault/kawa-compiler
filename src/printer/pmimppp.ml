@@ -22,7 +22,7 @@ let pp_program prog out_channel =
     | Putchar(PExpr e) ->
         print "putchar(%s);" (pp_expression e)
     | Putchar(PString s) ->
-        print "putchar(%s);" s
+        print "putchar(\"%s\");" s
     | Set(x, e) ->
         print "%s = %s;" x (pp_expression e)
     | If(c, s1, s2) ->
