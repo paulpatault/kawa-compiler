@@ -68,7 +68,7 @@ Vous y retrouverez :
 - Vérification du typage avant la compilation :
   - Vous retrouverez l'appel à `Kawa.type_checker.typ_prog` dans le fichier "main" [`kawac.ml`](./src/kawac.ml).
   Cette procédure à pour fonction de vérifier le bon typage et la cohérence du programme `kawa`.
-  Ainsi, si le programme est incohérent ou mal typé, une exception accompagnée un message d'erreur
+  Ainsi, si le programme est incohérent ou mal typé, une exception accompagnée d'un message d'erreur
   précis indiquant la cause de l'erreur ainsi que sa localisation dans le code.
 
 ### Modifications personnels
