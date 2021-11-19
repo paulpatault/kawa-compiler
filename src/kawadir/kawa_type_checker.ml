@@ -1,4 +1,5 @@
 open Utils.List_funcs
+open Ast.Kawa
 
 let typ_to_string = function
   | Typ_Int     -> "int"
@@ -201,7 +202,7 @@ let typ_prog ?file (prog: program): unit =
 
   let rec typ_instr {instr_desc=i;instr_loc=loc} info =
     match i with
-    | Assert e -> assert false
+    | Assert e -> ignore(typ_expr e); Typ_Void
 
     | Printf (s, params) ->
         let sl = String.split_on_char '%' s in

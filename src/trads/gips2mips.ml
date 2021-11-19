@@ -17,6 +17,11 @@ let translate_fdef fdef =
         @@ translate_label next
 
     | Assert (_, next) ->
+        (* seq r r zero
+        beqz  *)
+        (* beqz r next2
+        @@ translate_label next1
+        @@ translate_label next2 *)
         translate_label next
 
     | Unop(r, unop, r1, next) ->
