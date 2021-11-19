@@ -27,7 +27,8 @@ let translate_fdef fdef =
         | Move ->
             move r r1
         | Not ->
-            not_ r r1
+            (* si r1 = 0 alors 1 sinon 0 *)
+            seq r r1 zero
         | Read ->
             lw r 0 r1
         | Dec n ->
