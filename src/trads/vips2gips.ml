@@ -177,15 +177,19 @@ let translate_fdef fdef =
         (* Ne pas lire ce code pour ne pas devenir fou *)
         let code_putchar = 11 in
 
+        let i = ref 0 in
         let ss = List.rev @@ List.flatten @@ List.filter_map (fun e ->
           try
-            if e.[0] = 'n' then begin
+            if !i = 0 && s.[0] = 'n' then begin incr i; Some [Some e] end
+            else begin incr i;
+              if e.[0] = 'n' then begin
               try
                 let r = String.sub e 1 (String.length e - 1) in
                 Some [None; Some r]
               with Invalid_argument _ ->
                 Some [None]
-            end else Some [Some e]
+              end else Some [Some e]
+            end
           with _ -> None
           ) (String.split_on_char '\\' s)
         in
