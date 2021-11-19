@@ -118,13 +118,21 @@ print_typ:
 | s=STRING { S s }
 ;
 
+printf_params:
+| COMMA l=separated_list(COMMA, print_typ) { l }
+| { [] }
+;
+
 instruction_desc:
 | PUTCHAR LPAR l=separated_list(COMMA, print_typ) RPAR SEMI { Putchar(l) }
-| PRINTF  LPAR s=STRING COMMA l=separated_list(COMMA, print_typ) RPAR SEMI { Printf(s, l) }
+| PRINTF  LPAR s=STRING l=printf_params RPAR SEMI { Printf(s, l) }
 | a=mem_access SET e=expression SEMI { Set(a, e) }
 | IF LPAR c=expression RPAR
     BEGIN s1=list(instruction) END
     ELSE BEGIN s2=list(instruction) END { If(c, s1, s2) }
+| IF LPAR c=expression RPAR
+    BEGIN s1=list(instruction) END
+    { If(c, s1, []) }
 | WHILE LPAR c=expression RPAR
     BEGIN s=list(instruction) END { While(c, s) }
 | RETURN e=expression SEMI { Return(e) }
@@ -137,7 +145,7 @@ expression:
 ;
 
 expression_desc:
-| NOT e=expression (Unop(Not, e))
+| NOT e=expression { Unop(Not, e) }
 | n=CST { Cst(n) }
 | b=BOOL { Bool(b) }
 | a=mem_access { Get(a) }
