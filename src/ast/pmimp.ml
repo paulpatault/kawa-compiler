@@ -143,11 +143,12 @@ let mk_or e1 e2 =
       if n1 <> 0 then Cst 1
       else if n2 <> 0 then Cst 1
       else Cst 0
+  | e, Cst n
   | Cst n, e ->
-      if n = 0 then e
-      else Cst 1
-  | e1', e2' ->
-      Binop(Or, e1', e2')
+      if n <> 0 then Cst 1
+      else e
+  | _ ->
+      Binop(Or, e1, e2)
 
 let mk_and e1 e2 =
   match e1, e2 with
