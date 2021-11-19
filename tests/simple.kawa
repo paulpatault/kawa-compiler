@@ -1,11 +1,13 @@
 var int i;
+var int a;
+var int b;
 
 
 class StdLib {
 
   method void constructor() { }
 
-  @{not_optim, static}
+  @{static}
   method int max(int a, int b) {
     if (a > b) {
       return a;
@@ -14,7 +16,7 @@ class StdLib {
     }
   }
 
-  @{not_optim, static}
+  @{static}
   method int min(int a, int b) {
     if (a < b) {
       return a;
@@ -23,57 +25,29 @@ class StdLib {
     }
   }
 
-  @{not_optim, static}
-  method int modulo(int x, int n) {
-    if (x == n) {
-      return 0;
-    } else {
-      if (x < n) {
-        return x;
-      } else {
-        return StdLib.modulo(x - n, n);
-      }
-    }
-  }
-
-  @{not_optim, static}
+  @{static}
   method int pow(int x, int n) {
-    var int r;
-    r = 0;
-    putchar("n=");
-    putchar(n);
-    putchar(" ");
     if (n == 0) {
       return 1;
     } else {
-      r = StdLib.pow(x, n/2);
-      r = r * r;
-      if (StdLib.modulo(n, 2) == 1) {
-        putchar("r2=");
-        putchar(r*r);
-        putchar(" ");
-        return r * r;
-      } else {
-        putchar("r=");
-        putchar(r);
-        putchar(" ");
-        return r;
-      }
+      return x * StdLib.pow(x, n - 1);
     }
   }
 
 }
 
 main {
-  /* i = StdLib.max(2, 3);
-  putchar(i);
-  putchar(" ");
+  printf("aa\nbb\ncc", 0);
+
+  /* a = 2;
+  b = 3;
+  i = StdLib.max(2, 3);
+  printf("max(%d, %d)=%d\n", a, b, i);
 
   i = StdLib.min(2, 3);
-  putchar(i);
-  putchar(" "); */
+  printf("min(%d, %d)=%d\n", a, b, i);
 
   i = StdLib.pow(2, 3);
-  putchar(i);
+  printf("pow(%d, %d)=%d\n", a, b, i); */
   return 0;
 }

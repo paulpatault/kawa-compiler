@@ -14,3 +14,18 @@ let rev_string s =
   let l = List.rev l in
   let seq = List.to_seq l in
   String.of_seq seq
+
+
+let get_idxs_endline s =
+  if String.contains s '\\' then begin
+    let il = ref [] in
+    String.iteri (fun i c ->
+      if c = '\\' then begin try
+        let n = String.get s (i+1) in
+        if n = 'n' then
+          il := i :: !il;
+      with Invalid_argument _ -> ()
+      end
+    ) s;
+    !il
+  end else []

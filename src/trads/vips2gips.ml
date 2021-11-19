@@ -173,21 +173,51 @@ let translate_fdef fdef =
         end
 
     | Vips.Putchar(String s, next) ->
+        (* Ne pas lire ce code si vous voulez garder votre santée mentale *)
         let code_putchar = 11 in
 
-        let l = ref next in
-        let last = ref (Obj.magic ()) in
+        let ss = List.rev @@ List.flatten @@ List.filter_map (fun e ->
+          try
+            if e.[0] = 'n' then begin
+              try
+                let r = String.sub e 1 (String.length e - 1) in
+                Some [None; Some r]
+              with Invalid_argument _ ->
+                Some [None]
+            end else Some [Some e]
+          with _ -> None
+          ) (String.split_on_char '\\' s)
+        in
 
-        String.iter (fun e ->
-          let n = Char.code e in
-          l := add_instr (Pop(Mips.a0, !l));
-          l := add_instr (Syscall !l);
-          l := add_instr (Cst(scod, code_putchar, !l));
-          l := add_instr (Cst(Mips.a0, n, !l));
-          last := Push(Mips.a0, !l);
-          l := add_instr !last
-        ) (Utils.List_funcs.rev_string s);
-        !last
+        let l = ref next in
+        let last = ref None in
+
+        List.iter (function
+          Some s ->
+            String.iter (fun e ->
+              let n = Char.code e in
+              l := add_instr (Pop(Mips.a0, !l));
+              l := add_instr (Syscall !l);
+              l := add_instr (Cst(scod, code_putchar, !l));
+              l := add_instr (Cst(Mips.a0, n, !l));
+              last := Some (Push(Mips.a0, !l));
+              l := add_instr (Option.get !last)
+            ) (Utils.List_funcs.rev_string s);
+          | None ->
+              let n = 10 in
+              l := add_instr (Pop(Mips.a0, !l));
+              l := add_instr (Syscall !l);
+              l := add_instr (Cst(scod, code_putchar, !l));
+              l := add_instr (Cst(Mips.a0, n, !l));
+              last := Some (Push(Mips.a0, !l));
+              l := add_instr (Option.get !last)
+        ) ss;
+
+        let ret = match !last with
+          | Some e -> e
+          | None -> Jump next
+        in
+        ret
 
     | Vips.Putchar(Reg r, next) ->
         let code_putchar = 1 in

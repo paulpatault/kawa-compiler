@@ -1,4 +1,3 @@
-var point2d p2d;
 var point3d p3d;
 
 class point2d {
@@ -10,11 +9,6 @@ class point2d {
     this.x = px;
     this.y = py;
   }
-
-  method int sum() {
-    return this.x + this.y;
-  }
-
 }
 
 class point3d extends point2d {
@@ -23,20 +17,17 @@ class point3d extends point2d {
 
   method void constructor(int px, int py, int pz) {
     super(px, py);
-    /* this.x = px;
-    this.y = py; */
     this.z = pz;
   }
 
+  method void print() {
+    printf("x=%d, y=%d, z=%d\n", p3d.x, p3d.y, p3d.z);
+  }
 }
 
 main {
-  /* p2d = new point2d(4, 2); */
   p3d = new point3d(1, 2, 3);
-  putchar(p3d.x);
-  putchar(" ");
-  putchar(p3d.y);
-  putchar(" ");
-  putchar(p3d.z);
+  p3d.print();
+  p3d.print();
   return 0;
 }
