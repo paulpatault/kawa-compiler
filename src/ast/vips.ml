@@ -25,6 +25,7 @@ type instr =
   | SetGlobal    of string * register * label
   | GetParam     of register * int * label
   | Putchar      of print_type * label
+  | Assert       of register * label
   | Jump         of label
   | CJump        of register * label * label
   | Call         of register * func * register list * Pimp.tag list * label

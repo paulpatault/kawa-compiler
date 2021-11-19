@@ -1,33 +1,38 @@
-var point3d p3d;
-
-class point2d {
-
-  attribute int x;
-  attribute int y;
-
-  method void constructor(int px, int py) {
-    this.x = px;
-    this.y = py;
-  }
-}
-
-class point3d extends point2d {
-
-  attribute int z;
-
-  method void constructor(int px, int py, int pz) {
-    super(px, py);
-    this.z = pz;
-  }
-
-  method void print() {
-    printf("x=%d, y=%d, z=%d\n", p3d.x, p3d.y, p3d.z);
-  }
-}
+var bool a;
+var bool b;
 
 main {
-  p3d = new point3d(1, 2, 3);
-  p3d.print();
-  p3d.print();
+
+  a = false;
+  b = true;
+
+  if(!a && b) {
+    printf("ok\n");
+  }
+
+  if (a || b) {
+    printf("ok\n");
+  }
+
+  if (a || !b) {
+    printf("not ok\n");
+  }
+
+  if (!a || !b) {
+    printf("ok\n");
+  }
+
+  if (!(a && !b)) {
+    printf("ok\n");
+  }
+
+  if (!(!a && !b)) {
+    printf("ok\n");
+  }
+
+  if (!(a && b)) {
+    printf("ok\n");
+  }
+
   return 0;
 }

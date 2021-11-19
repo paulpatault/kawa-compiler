@@ -25,6 +25,7 @@ let make_interference_graph fdef =
       | SetGlobal(_, r, _)
       | GetParam(r, _, _)
       | Putchar(Reg r, _)
+      | Assert (r, _)
       | CJump(r, _, _)
       | Return r ->
           graph := Graph.add_node r !graph
@@ -52,7 +53,7 @@ let make_interference_graph fdef =
         Graph.S.iter (fun r' ->
           graph := Graph.add_edge r r' (!graph))
         (Graph.S.diff (Hashtbl.find live_out label) (Graph.S.add r Graph.S.empty))
-    | Putchar _ | SetGlobal _ | Jump _ | CJump _ | Return _ | Write _ | StaticWrite _ ->
+    | Putchar _ | Assert _ | SetGlobal _ | Jump _ | CJump _ | Return _ | Write _ | StaticWrite _ ->
         ()
   ) fdef.code;
 

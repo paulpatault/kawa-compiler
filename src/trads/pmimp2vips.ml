@@ -130,6 +130,13 @@ let translate_fdef f =
         Hashtbl.add code lput (Putchar(Reg r, next));
         l
 
+    | Pmimp.Assert e ->
+        let r = new_reg () in
+        let lput = new_label() in
+        let l = translate_expr r e lput in
+        Hashtbl.add code lput (Assert(r, next));
+        l
+
     | Pmimp.Return e ->
         let r = new_reg () in
         let l = add_instr (Return r) in

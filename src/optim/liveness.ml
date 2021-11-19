@@ -13,6 +13,7 @@ let def = function
   | Binop(r, _, _, _, _) ->
       S.singleton r
   | Putchar(_, _)
+  | Assert _
   | Write(_, _, _)
   | StaticWrite(_, _, _)
   | CJump(_, _, _)
@@ -27,6 +28,7 @@ let use = function
   | Putchar(String _, _)
   | Jump _ ->
       S.empty
+  | Assert (r, _)
   | Putchar(Reg r, _)
   | GetGlobal(r, _, _)
   | SetGlobal(_, r, _)
@@ -62,6 +64,7 @@ let liveness fdef =
       | Call(_, _, _, _, next)
       | Write(_, _, next)
       | StaticWrite(_, _, next)
+      | Assert (_, next)
       | Putchar(_, next) ->
           begin match Hashtbl.find_opt preds next with
             | Some p -> Hashtbl.replace preds next (l::p)
@@ -100,6 +103,7 @@ let liveness fdef =
       | Call(_, _, _, _, next)
       | Write(_, _, next)
       | StaticWrite(_, _, next)
+      | Assert (_, next)
       | Putchar(_, next) ->
           begin match Hashtbl.find_opt live_in next with
             | Some e -> e

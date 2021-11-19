@@ -8,6 +8,7 @@
     List.iter (fun (s, k) -> Hashtbl.add h s k)
       [ "putchar",    PUTCHAR;
         "printf",     PRINTF;
+        "assert",     ASSERT;
         "if",         IF;
         "else",       ELSE;
         "while",      WHILE;

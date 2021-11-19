@@ -77,6 +77,16 @@ let translate_fdef fdef =
   let ra   = "$ra" in
 
   let tr_instr i = match i with
+    | Vips.Assert (r, next) ->
+       begin match Hashtbl.find alloc r with
+       | Register r' ->
+           reg_use r';
+           Assert(r', next)
+       | Stacked k ->
+          let l = add_instr (SetLocal(k, tmp1, next)) in
+          Assert(tmp1, l)
+       end
+
     | Vips.Cst(r, n, next) ->
        begin match Hashtbl.find alloc r with
        | Register r' ->
@@ -96,6 +106,7 @@ let translate_fdef fdef =
           let l = add_instr (SetLocal(k, tmp1, next)) in
           Addr(tmp1, s, l)
        end
+
 
     | Vips.Unop(r1, op, r2, next) ->
        begin match Hashtbl.find alloc r1, Hashtbl.find alloc r2 with

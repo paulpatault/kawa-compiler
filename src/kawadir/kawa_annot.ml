@@ -20,6 +20,7 @@ let annot_prog (prog: program): program =
     match i with
     | Printf _
     | Putchar _
+    | Assert _
     | Set _ -> false
     | If(e, b1, b2) ->
         is_pure_expr e && is_pure_seq b1 && is_pure_seq b2

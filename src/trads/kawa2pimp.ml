@@ -196,6 +196,8 @@ let tr_prog (prog: Kawa.program) =
   (* Tradution d'une instruction *)
   (* *****************************)
   let rec tr_instr = function
+    | Kawa.Assert e ->
+        [Assert (tr_expr e.expr_desc)]
     | Kawa.Printf (s, params) ->
         let sl = String.split_on_char '%' s in
         let init = ref false in

@@ -26,7 +26,7 @@
 %token TYP_VOID TYP_INT TYP_BOOL
 %token NEW CLASS EXTENDS METHOD DOT MAIN THIS VAR ATTRIBUTE SUPER
 %token LPAR RPAR COMMA BEGIN END SEMI
-%token PUTCHAR PRINTF SET IF ELSE WHILE RETURN
+%token PUTCHAR PRINTF SET IF ELSE WHILE RETURN ASSERT
 %token EOF
 
 %left OR
@@ -118,12 +118,8 @@ print_typ:
 | s=STRING { S s }
 ;
 
-printf_params:
-| COMMA l=separated_list(COMMA, print_typ) { l }
-| { [] }
-;
-
 instruction_desc:
+| ASSERT e=expression SEMI { Assert(e) }
 | PUTCHAR LPAR l=separated_list(COMMA, print_typ) RPAR SEMI { Putchar(l) }
 | PRINTF  LPAR s=STRING l=printf_params RPAR SEMI { Printf(s, l) }
 | a=mem_access SET e=expression SEMI { Set(a, e) }
@@ -137,6 +133,11 @@ instruction_desc:
     BEGIN s=list(instruction) END { While(c, s) }
 | RETURN e=expression SEMI { Return(e) }
 | e=expression SEMI { Expr(e) }
+;
+
+printf_params:
+| COMMA l=separated_list(COMMA, print_typ) { l }
+| { [] }
 ;
 
 expression:

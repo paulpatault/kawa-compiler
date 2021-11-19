@@ -13,6 +13,7 @@ type expression =
   | CallPointeur of expression * expression list * Pimp.tag list
 
 and instruction =
+  | Assert  of expression
   | Putchar of print_type
   | Set     of string * expression
   | If      of expression * sequence * sequence

@@ -16,6 +16,9 @@ let translate_fdef fdef =
         la r s
         @@ translate_label next
 
+    | Assert (_, next) ->
+        translate_label next
+
     | Unop(r, unop, r1, next) ->
         begin match unop with
         | Addi n ->

@@ -53,6 +53,8 @@ let pp_program prog out_channel =
         print "*%s <- %s       | %s" x r l
     | GetParam(d, k, l) ->
         print "%s <- param[%i] | %s" d k l
+    | Assert (r, l) ->
+        print "assert %s           | %s" r l
     | Jump l ->
         print "jump            | %s" l
     | CJump(r, l1, l2) ->
