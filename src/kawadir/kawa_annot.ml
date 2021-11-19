@@ -4,7 +4,9 @@ let annot_prog (prog: program): program =
 
   let rec is_pure_expr {expr_desc=e;_} =
     match e with
-    | Cst _ | Bool _ | Get _ | This -> true
+    | Cst _ | Bool _ | Get _ | This | Instanceof _ -> true
+    | Unop (_, e) ->
+        is_pure_expr e
     | Binop (_, e1, e2) ->
         is_pure_expr e1 && is_pure_expr e2
     | New(_, params) ->

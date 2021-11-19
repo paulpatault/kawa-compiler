@@ -26,6 +26,8 @@ let translate_fdef fdef =
             sll r r1 n
         | Move ->
             move r r1
+        | Not ->
+            not_ r r1
         | Read ->
             lw r 0 r1
         | Dec n ->

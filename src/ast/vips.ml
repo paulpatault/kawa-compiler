@@ -8,7 +8,7 @@ let new_reg =
 type label = string
 
 type unop  =
-  | Move | Alloc | Read
+  | Move | Alloc | Read | Not
   | Addi   of int
   | Subi   of int
   | ShiftL of int

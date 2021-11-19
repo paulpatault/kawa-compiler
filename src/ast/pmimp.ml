@@ -1,4 +1,4 @@
-type unop = Addi of int | Subi of int | ShiftL of int | Read | Alloc | Dec of int
+type unop = Addi of int | Subi of int | ShiftL of int | Read | Alloc | Dec of int | Not
 
 type binop = Add | Sub | Mul | Div | Lt | Le | Eq | Neq | And | Or
 

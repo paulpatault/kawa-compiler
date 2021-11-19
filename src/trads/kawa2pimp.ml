@@ -30,7 +30,7 @@ let tr_prog (prog: Kawa.program) =
   let curr_meth = ref "" in
 
   let rec class_of_expr = function
-    | Kawa.Cst _ | Kawa.Bool _ | Kawa.Binop _ -> assert false
+    | Kawa.Cst _ | Kawa.Bool _ | Kawa.Binop _ | Kawa.Unop _ | Kawa.Instanceof _ -> assert false
     | Kawa.(Get (Var x)) ->
         if Char.uppercase_ascii x.[0] = x.[0] then
           `Classe x
@@ -114,6 +114,9 @@ let tr_prog (prog: Kawa.program) =
     | Kawa.Bool b ->
         Bool b
 
+    | Kawa.Unop (Not, e) ->
+        Unop(Not, tr_expr e.expr_desc)
+
     | Kawa.Binop (op, e1, e2) ->
         Binop(tr_op op, tr_expr e1.expr_desc, tr_expr e2.expr_desc)
 
@@ -127,6 +130,9 @@ let tr_prog (prog: Kawa.program) =
 
     | Kawa.This ->
         Var "this"
+
+    | Kawa.Instanceof (_e, _s) -> (*TODO*) assert false
+
 
     | Kawa.New(class_name, params) ->
         let params = List.map (fun e -> tr_expr Kawa.(e.expr_desc)) params in

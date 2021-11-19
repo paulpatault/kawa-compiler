@@ -4,7 +4,8 @@ open Pmimp
 let get_unop = function
   | Pimp.Dec n -> Dec n
   | Pimp.Alloc -> Alloc
-  | Pimp.Read -> Read
+  | Pimp.Read  -> Read
+  | Pimp.Not   -> Not
 
 let rec isel_expr: Pimp.expression -> Pmimp.expression = function
   | Pimp.Cst n ->

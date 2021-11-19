@@ -6,6 +6,7 @@ let pp_unop: unop -> string = function
   | Subi n -> sprintf "(-%i)+ " n
   | Alloc  -> "alloc "
   | Read   -> "read "
+  | Not   -> "not "
   | Move   -> ""
   | _ -> assert false
 

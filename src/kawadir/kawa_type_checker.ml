@@ -47,6 +47,8 @@ let typ_prog ?file (prog: program): unit =
           error ~loc:e.expr_loc "Les méthodes statiques ne peuvent pas faire appel à <this>"
         else
           `Instance !curr_class
+    | Instanceof _ ->
+        (*TODO*) failwith "not implemented yet"
     | New(class_name, _params) ->
         `Instance class_name
     | Get (Field(e, x)) ->
@@ -69,7 +71,7 @@ let typ_prog ?file (prog: program): unit =
         | Typ_Class s, _params, _tags -> `Instance s
         | _ -> raise (Invalid_argument("_"))
         end
-    | Cst _ | Bool _ | Binop _ -> assert false
+    | Cst _ | Bool _ | Binop _ | Unop _ -> assert false
   in
 
   let typ_op = function
@@ -84,10 +86,18 @@ let typ_prog ?file (prog: program): unit =
   let rec typ_expr {expr_desc=e;expr_loc=loc} =
     match e with
     | Cst _ -> Typ_Int
+
     | Bool _ -> Typ_Bool
+
+    | Unop (Not, e) ->
+        if typ_expr e = Typ_Bool then Typ_Bool
+        else error ~loc
+          "Seulement les expressions de type <bool> peuvent recevoir l'opérateur <!> (not)"
+
     | Binop ((Eq|Neq|And|Or), e1, e2) ->
         if typ_expr e1 = typ_expr e2 then Typ_Bool
-        else error "" ~loc
+        else error "Seulement les expressions de même type sont comparables" ~loc
+
     | Binop ((Add|Sub|Mul|Div|Lt|Le|Gt|Ge) as op, e1, e2) ->
         begin match typ_expr e1, typ_expr e2 with
         | Typ_Int, Typ_Int ->
@@ -97,8 +107,10 @@ let typ_prog ?file (prog: program): unit =
               "L'opérateur '%s' doit s'appliquer à deux variables de type <int>"
               (op_to_string op))
         end
+
     | Get mem_access ->
         typ_mem_access mem_access loc
+
     | This ->
         let (_, meths), _ = Hashtbl.find classes_info_in_kawa !curr_class in
         let _, _, tags = List.assoc !curr_meth meths in
@@ -106,6 +118,9 @@ let typ_prog ?file (prog: program): unit =
           error ~loc "Les méthodes statiques ne peuvent pas faire appel à <this>"
         else
           Typ_Class !curr_class
+
+    | Instanceof _ -> (*TODO*) failwith "not implemented yet"
+
     | New(class_name, params) ->
         begin try
           let (_, meths), _ = Hashtbl.find classes_info_in_kawa class_name in

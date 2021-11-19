@@ -77,7 +77,7 @@ Vous y retrouverez :
   - `putchar` peut prendre autant un grand nombre de paramètres, autant que l'on veut. C'est à dire
   que l'on peut faire par exemple `putchar("a=", a, ", b=", b)`.
 - Extension de la syntaxe de Kawa :
-  - Ajout des opérateurs : `<=`, `>`, `>=`, `!=`, `&&`, `||`
+  - Ajout des opérateurs : `<=`, `>`, `>=`, `!=`, `&&`, `||`, `!`
   - Annotations dans le code : tags (à écrire juste avant une déclaration de méthode)
     - Syntaxe : `@{tag_name_1, …, tag_name_n}`.
     - Tag `not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels.
@@ -88,9 +88,9 @@ Vous y retrouverez :
   Cela permet à l'utilisateur de ne pas annoter lui même toutes les fonctions ayant des effets de bord.
 - Ajout de la fonction `printf()`, qui prend en arguments un string, suivi d'un certain nombre de
   d'expression de type `int` ou de strings. Exemples :
-    - `printf("a=%d", a)`, si a est une variable de type int.
-    - `printf("a=%d, b=%d", a, b)`, si `a` et `b` sont des variables de type int.
-    - `printf("a=%d, b=%s", a, "coucou")`, si a est une variable de type int.
+    - `printf("a=%d\n", a)`, si a est une variable de type int.
+    - `printf("a=%d, b=%d\n", a, b)`, si `a` et `b` sont des variables de type int.
+    - `printf("a=%d, b=%s\n", a, "coucou")`, si a est une variable de type int.
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.

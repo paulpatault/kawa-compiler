@@ -11,6 +11,7 @@ type typ =
   | Typ_Class of string
 
 type binop = Add | Sub | Mul | Div | Lt | Le | Gt | Ge | Eq | Neq | And | Or
+type unop = Not
 
 type expr = {
   expr_desc: expr_desc;
@@ -21,10 +22,12 @@ and expr_desc =
   | Cst    of int
   | Bool   of bool
   | Binop  of binop * expr * expr
+  | Unop   of unop  * expr
   | Get      of mem_access
   | This
   | New      of string * expr list
   | MethCall of expr * string * expr list
+  | Instanceof of expr * string
 
 and mem_access =
   | Var   of string

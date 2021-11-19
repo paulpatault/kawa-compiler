@@ -6,6 +6,7 @@ let tr_unop = function
   | Vips.Addi n   -> Addi n
   | Vips.Subi n   -> Subi n
   | Vips.Move     -> Move
+  | Vips.Not      -> Not
   | Vips.Read     -> Read
   | Vips.Alloc    -> Alloc
   | Vips.ShiftL n -> ShiftL n
@@ -173,7 +174,7 @@ let translate_fdef fdef =
         end
 
     | Vips.Putchar(String s, next) ->
-        (* Ne pas lire ce code si vous voulez garder votre santée mentale *)
+        (* Ne pas lire ce code pour ne pas devenir fou *)
         let code_putchar = 11 in
 
         let ss = List.rev @@ List.flatten @@ List.filter_map (fun e ->

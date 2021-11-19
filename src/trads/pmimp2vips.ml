@@ -45,6 +45,7 @@ let translate_fdef f =
          | Pmimp.ShiftL n -> ShiftL n
          | Pmimp.Alloc    -> Alloc
          | Pmimp.Read     -> Read
+         | Pmimp.Not      -> Not
          | Pmimp.Dec n    -> Dec n
         in
 

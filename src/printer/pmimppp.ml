@@ -64,6 +64,8 @@ let pp_program prog out_channel =
         sprintf "(%s<<%i)" (pp_expression e) n
     | Unop(Read, e) ->
         sprintf "read(%s)" (pp_expression e)
+    | Unop(Not, e) ->
+        sprintf "not(%s)" (pp_expression e)
     | Unop(Alloc, e) ->
         sprintf "alloc(%s)" (pp_expression e)
     | Unop(Dec n, e) ->

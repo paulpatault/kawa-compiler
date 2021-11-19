@@ -1,5 +1,5 @@
-- instanceof()
-- transtypage
-- classes abstraites
-- floats ?
-- div et sub
+- instanceof() : en cours
+- transtypage : en cours
+- classes abstraites : pas prévu de le faire
+- floats : trop compliqué
+- div et sub : bugfix todo

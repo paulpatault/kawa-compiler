@@ -15,7 +15,7 @@
 
 %}
 
-%token PLUS STAR AND OR DIV MINUS
+%token PLUS STAR AND OR DIV MINUS NOT
 %token LT LE GT GE EQ NEQ
 
 
@@ -29,10 +29,13 @@
 %token PUTCHAR PRINTF SET IF ELSE WHILE RETURN
 %token EOF
 
-%nonassoc LT LE GT GE EQ NEQ
-%left PLUS OR MINUS
-%left STAR AND DIV
+%left OR
+%left AND
+%left LT LE GT GE EQ NEQ
+%left PLUS MINUS
+%left STAR DIV
 %left DOT
+%nonassoc NOT
 
 %start program
 %type <Ast.Kawa.program> program
@@ -134,6 +137,7 @@ expression:
 ;
 
 expression_desc:
+| NOT e=expression (Unop(Not, e))
 | n=CST { Cst(n) }
 | b=BOOL { Bool(b) }
 | a=mem_access { Get(a) }

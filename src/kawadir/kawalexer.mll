@@ -6,26 +6,26 @@
     let keyword_or_ident =
     let h = Hashtbl.create 17 in
     List.iter (fun (s, k) -> Hashtbl.add h s k)
-      [ "putchar",  PUTCHAR;
-        "printf",   PRINTF;
-        "if",       IF;
-        "else",     ELSE;
-        "while",    WHILE;
-        "true",     BOOL true;
-        "false",    BOOL false;
-        "return",   RETURN;
-        "int",      TYP_INT;
-        "bool",     TYP_BOOL;
-        "void",     TYP_VOID;
-        "class",    CLASS;
-        "super",    SUPER;
-        "extends",  EXTENDS;
-        "new",      NEW;
-        "this",     THIS;
-        "method",   METHOD;
-        "var",      VAR;
-        "attribute", ATTRIBUTE;
-        "main",     MAIN;
+      [ "putchar",    PUTCHAR;
+        "printf",     PRINTF;
+        "if",         IF;
+        "else",       ELSE;
+        "while",      WHILE;
+        "true",       BOOL true;
+        "false",      BOOL false;
+        "return",     RETURN;
+        "int",        TYP_INT;
+        "bool",       TYP_BOOL;
+        "void",       TYP_VOID;
+        "class",      CLASS;
+        "super",      SUPER;
+        "extends",    EXTENDS;
+        "new",        NEW;
+        "this",       THIS;
+        "method",     METHOD;
+        "var",        VAR;
+        "attribute",  ATTRIBUTE;
+        "main",       MAIN;
       ] ;
     fun s ->
       try  Hashtbl.find h s
@@ -71,6 +71,8 @@ rule token = parse
       { AND }
   | "||"
       { OR }
+  | "!"
+      { NOT }
   | "<"
       { LT }
   | "<="

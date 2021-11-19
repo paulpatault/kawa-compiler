@@ -7,6 +7,7 @@ let pp_unop: unop -> string = function
   | Move     -> "(move) "
   | Alloc  -> "alloc "
   | Read   -> "read "
+  | Not   -> "not "
   | _        -> assert false
 
 let pp_binop: binop -> string = function
