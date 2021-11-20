@@ -1,0 +1,1 @@
+/Users/paulpatault/.config/nvim/syntax/kawa.vim
