@@ -1,9 +1,7 @@
-var int i;
-var int a;
-var int b;
+var int x;
+var int y;
 
-
-class StdLib {
+class Math {
 
   method void constructor() { }
 
@@ -31,27 +29,17 @@ class StdLib {
     if (n == 0) {
       return 1;
     } else {
-      return x * StdLib.pow(x, n - 1);
+      return x * Math.pow(x, n - 1);
     }
   }
 
 }
 
 main {
-  printf("powxxx\n");
-  printf("powxxx == %d \n", StdLib.pow(1, -2));
-
-
-
-  /* a = 2;
-  b = 3;
-  i = StdLib.max(2, 3);
-  printf("max(%d, %d)=%d\n", a, b, i);
-
-  i = StdLib.min(2, 3);
-  printf("min(%d, %d)=%d\n", a, b, i);
-
-  i = StdLib.pow(2, 3);
-  printf("pow(%d, %d)=%d\n", a, b, i); */
+  x = 4;
+  y = -2;
+  printf("max(%d,%d)=%d\n", x, y, Math.max(x, y)); // OK
+  printf("min(%d,%d)=%d\n", x, y, Math.min(x, y)); // OK
+  printf("pow(%d,%d)=%d\n", x, y, Math.pow(x, y)); // Déclenchement du assert car y < 0
   return 0;
 }
