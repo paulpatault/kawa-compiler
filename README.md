@@ -20,7 +20,8 @@ Compilateur optimisant du langage Kawa (langage objet type Java) vers l'assemble
     ```bash
     $ make compile file=<nom_du_fichier.kawa>
     ```
-  + Puis éventuellement, exécuter le fichier asm généré : (nécessite le fichier `Mars4_5.jar` dans le dossier)
+  + Puis éventuellement, exécuter directement en ligne de commande le fichier asm généré :
+  (nécessite le fichier `Mars4_5.jar` dans le dossier `./bin`)
     ```bash
     $ make run file=<nom_du_fichier.asm>
     ```

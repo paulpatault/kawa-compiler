@@ -10,7 +10,7 @@ endif
 
 run:
 ifdef file
-	java -jar Mars4_5.jar $(file)
+	java -jar ./bin/Mars4_5.jar $(file)
 else
 	@echo 'Il faut appeler cette commande avec un argument: make compile file=<fichier>.asm'
 endif
