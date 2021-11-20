@@ -29,7 +29,7 @@ type instr =
   | Write       of register * register * label
   | StaticWrite of string * string list * label
   | Syscall     of label
-  | Assert      of register * label
+  | Assert      of register * int * label
 
 and func =
   | FName of string

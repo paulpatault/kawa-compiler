@@ -57,7 +57,7 @@ let pp_program prog out_channel =
        print "putchar(%s)     | %s" r l
     | Putchar(String s, l) ->
         print "putchar(\"%s\");     | %s" s l
-    | Assert (r, l) ->
+    | Assert (r, _, l) ->
         print "assert %s           | %s" r l
     | Call(d, FName f, rs, tag, l) ->
        print "%s <- %s(%s) @<tag:%s>   | %s" d f (pp_args rs) (pp_tag tag) l

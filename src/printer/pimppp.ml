@@ -26,7 +26,7 @@ let pp_program prog out_channel =
         print "putchar(\"%s\");" s
     | Putchar (PExpr e) ->
         print "putchar(%s);" (pp_expression e)
-    | Assert e ->
+    | Assert (e, _) ->
         print "assert(%s);" (pp_expression e)
     | Set(x, e) ->
         print "%s = %s;" x (pp_expression e)

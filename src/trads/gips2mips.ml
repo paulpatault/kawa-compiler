@@ -16,13 +16,16 @@ let translate_fdef fdef =
         la r s
         @@ translate_label next
 
-    | Assert (r, next) ->
+    | Assert (r, line, next) ->
         bnez r next
-        @@ li a0 10 (*retour à la ligne*)
-        @@ li v0 11 (*print ascii*)
+        @@ li a0 10 (* retour à la ligne*)
+        @@ li v0 11 (* print ascii*)
         @@ syscall @@ syscall
         @@ la a0 "exit_on_assert"
-        @@ li v0 4 (*print string*)
+        @@ li v0 4 (* print string*)
+        @@ syscall
+        @@ li a0 line (* affichage de la ligne d'erreur *)
+        @@ li v0 1    (* print int *)
         @@ syscall
         @@ li v0 10 (*exit*)
         @@ syscall
@@ -220,7 +223,7 @@ let translate_program prog =
       with Brk_fdef fdef -> fdef
     in
 
-    let a = ref (S "exit_on_assert:\n\t.asciiz \">>Échec d'assertion<<\"") in
+    let a = ref (S "exit_on_assert:\n\t.asciiz \">>> Échec d'assertion en ligne : \"") in
     Hashtbl.iter (fun _str instr ->
       match instr with
       | StaticWrite(s, sl, _) ->

@@ -45,8 +45,8 @@ let rec isel_expr: Pimp.expression -> Pmimp.expression = function
       CallPointeur(isel_expr e, l, tag)
 
 and isel_instr: Pimp.instruction -> Pmimp.instruction = function
-  | Pimp.Assert e ->
-      Assert (isel_expr e)
+  | Pimp.Assert (e, l) ->
+      Assert (isel_expr e, l)
   | Pimp.Putchar (PString s) ->
       Putchar (PString s)
   | Pimp.Putchar (PExpr e) ->

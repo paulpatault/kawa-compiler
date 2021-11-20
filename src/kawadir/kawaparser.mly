@@ -119,7 +119,7 @@ print_typ:
 ;
 
 instruction_desc:
-| ASSERT e=expression SEMI { Assert(e) }
+| ASSERT e=expression SEMI { Assert(e, $startpos.pos_lnum) }
 | PUTCHAR LPAR l=separated_list(COMMA, print_typ) RPAR SEMI { Putchar(l) }
 | PRINTF  LPAR s=STRING l=printf_params RPAR SEMI { Printf(s, l) }
 | a=mem_access SET e=expression SEMI { Set(a, e) }

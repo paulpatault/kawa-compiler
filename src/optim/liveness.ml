@@ -28,7 +28,7 @@ let use = function
   | Putchar(String _, _)
   | Jump _ ->
       S.empty
-  | Assert (r, _)
+  | Assert (r, _, _)
   | Putchar(Reg r, _)
   | GetGlobal(r, _, _)
   | SetGlobal(_, r, _)
@@ -64,7 +64,7 @@ let liveness fdef =
       | Call(_, _, _, _, next)
       | Write(_, _, next)
       | StaticWrite(_, _, next)
-      | Assert (_, next)
+      | Assert (_, _, next)
       | Putchar(_, next) ->
           begin match Hashtbl.find_opt preds next with
             | Some p -> Hashtbl.replace preds next (l::p)
@@ -103,7 +103,7 @@ let liveness fdef =
       | Call(_, _, _, _, next)
       | Write(_, _, next)
       | StaticWrite(_, _, next)
-      | Assert (_, next)
+      | Assert (_, _, next)
       | Putchar(_, next) ->
           begin match Hashtbl.find_opt live_in next with
             | Some e -> e

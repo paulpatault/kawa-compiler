@@ -77,14 +77,14 @@ let translate_fdef fdef =
   let ra   = "$ra" in
 
   let tr_instr i = match i with
-    | Vips.Assert (r, next) ->
+    | Vips.Assert (r, line, next) ->
        begin match Hashtbl.find alloc r with
        | Register r' ->
            reg_use r';
-           Assert(r', next)
+           Assert(r', line, next)
        | Stacked k ->
           let l = add_instr (SetLocal(k, tmp1, next)) in
-          Assert(tmp1, l)
+          Assert(tmp1, line, l)
        end
 
     | Vips.Cst(r, n, next) ->

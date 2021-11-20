@@ -25,7 +25,7 @@ let make_interference_graph fdef =
       | SetGlobal(_, r, _)
       | GetParam(r, _, _)
       | Putchar(Reg r, _)
-      | Assert (r, _)
+      | Assert (r, _, _)
       | CJump(r, _, _)
       | Return r ->
           graph := Graph.add_node r !graph

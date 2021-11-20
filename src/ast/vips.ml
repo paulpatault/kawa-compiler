@@ -25,11 +25,10 @@ type instr =
   | SetGlobal    of string * register * label
   | GetParam     of register * int * label
   | Putchar      of print_type * label
-  | Assert       of register * label
+  | Assert       of register * int * label
   | Jump         of label
   | CJump        of register * label * label
   | Call         of register * func * register list * Pimp.tag list * label
-  (* | CallPointeur of register * register * register list * label *)
   | Return       of register
   | Write        of register * register * label
   | StaticWrite  of string * string list * label

@@ -18,7 +18,7 @@ and func =
   | FPointer of expression
 
 and instruction =
-  | Assert  of expression
+  | Assert  of expression * int
   | Putchar of print_type
   | Set     of string * expression
   | If      of expression * sequence * sequence
