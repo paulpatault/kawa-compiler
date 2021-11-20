@@ -91,6 +91,9 @@ Vous y retrouverez :
     - `printf("a=%d\n", a)`, si a est une variable de type int.
     - `printf("a=%d, b=%d\n", a, b)`, si `a` et `b` sont des variables de type int.
     - `printf("a=%d, b=%s\n", a, "coucou")`, si a est une variable de type int.
+- L'instruction `assert <expression>` évalue dynamiquement la valeur de l'expression :
+  - si le résultat est `false`, on affiche un message d'erreur et on quitte le programme
+  - sinon, rien ne se passe, et le programme continue "comme s'il n'avait pas croisé cette instruction"
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.

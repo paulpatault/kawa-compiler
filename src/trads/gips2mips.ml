@@ -18,6 +18,9 @@ let translate_fdef fdef =
 
     | Assert (r, next) ->
         bnez r next
+        @@ li a0 10 (*retour à la ligne*)
+        @@ li v0 11 (*print ascii*)
+        @@ syscall @@ syscall
         @@ la a0 "exit_on_assert"
         @@ li v0 4 (*print string*)
         @@ syscall
@@ -139,10 +142,9 @@ let translate_fdef fdef =
         sw r2 0 r1
         @@ translate_label next
 
-    | StaticWrite(_, _, _next) ->
+    | StaticWrite(_, _, _) ->
         (* cas dans lequel on ne devrait pas arriver *)
         assert false
-        (* translate_label next *)
 
   and translate_label l =
     if Hashtbl.mem vus l then
@@ -218,7 +220,7 @@ let translate_program prog =
       with Brk_fdef fdef -> fdef
     in
 
-    let a = ref (S "exit_on_assert:\n\t.asciiz \"Échec d'assertion\"") in
+    let a = ref (S "exit_on_assert:\n\t.asciiz \">>Échec d'assertion<<\"") in
     Hashtbl.iter (fun _str instr ->
       match instr with
       | StaticWrite(s, sl, _) ->
