@@ -1,0 +1,23 @@
+var int x;
+var int n;
+
+main {
+    if (StdLib.max(-1, 42) < 0) {
+        assert false;
+    }
+
+    x = 2;
+    n = 4;
+
+    printf("pow(%d,%d)=%d\n", x, n, StdLib.pow(x, n));
+
+    x = 42;
+    n = -1;
+
+    printf("max(%d,%d)=%d\n", x, n, StdLib.max(x, n));
+    printf("min(%d,%d)=%d\n", x, n, StdLib.min(x, n));
+
+    return 0;
+}
+
+

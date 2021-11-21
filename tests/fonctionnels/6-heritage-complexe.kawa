@@ -1,16 +1,20 @@
+/***********************************************************************************
+ *
+ * Héritage à plusieurs niveaux :
+ *   printer -> point2d -> point3d
+ *   avec surchage non triviale de méthodes :
+ *     point2d surcharge print() en utilisant sum(),
+ *     point3d surcharge sum() mais pas print()
+ *     donc point3d.print() utilise le print de point2d mais le sum() de point3d
+ *
+ **********************************************************************************/
+
 var point3d p3d;
 
 class printer {
-
   method void constructor() {}
-
   method void print() {}
-
-  @{not_optim}
-  method void space() {
-    putchar(" ");
-  }
-
+  method void space() { putchar(" "); }
 }
 
 class point2d extends printer {
@@ -27,7 +31,6 @@ class point2d extends printer {
     return this.x + this.y;
   }
 
-  @{not_optim}
   method void print() {
     putchar(this.sum());
     this.space();
@@ -45,7 +48,6 @@ class point3d extends point2d {
     this.z = z;
   }
 
-  @{not_optim}
   method void move(int dx, int dy, int dz) {
     this.x = this.x + dx;
     this.y = this.y + dy;

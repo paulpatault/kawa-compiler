@@ -127,15 +127,25 @@ Vous y retrouverez :
 - Possibilité de compiler un fichier kawa avec des options :
   - `-o <out.asm>` : il est possible de choisir le nom de sortie du fichier MIPS généré.
   - `-verbose` : si cette option est activé, les fichiers des langages intermédiaires seront générés.
+- Les regitres `a0..a3` sont utilisés en priorité pour passer les argumets aux fonctions. Si
+  une méthode à plus de 4 paramètres, ceux-ci seront passés par la pile.
+- Librairie standard (facilement complétable) : dans le fichier [`stdlib.kawa`](./stdlib/stdlib.kawa)
+  se trouve une classe non instanciable avec un certains nombre de méthodes statiques (liste à compléter).
+  Ce fichier est chargé à la compilation d'un fichier kawa. On peut ainsi comme dans cet
+  [`exemple`](./tests/fonctionnels/11-use_stdlib.kawa) l'appeler comme on l'imagine.
 
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.
-
+- Les fichiers d'exemples sont classés par "difficulté", ils ont suivi les versions de mon projet :
+  chacun comporte au fur à à mesure de plus en plus de features. Et ils sont tous "rétro-compatibles".
+- Au début de chaque fichier d'exemples figures une descriptions de ce qui est utilisé dans le code kawa.
+- La ligne indiquée par un assert levé ne prend pas en compte un éventuelle décalage avec des
+  commentaires dans le code kawa, je ne sais pas comment régler ce problème.
 
 ## Exemples d'éxecution
 
 | Fichier kawa bien formé | Assert false dynamique | Fichier Kawa mal formé |
 |-|-|-|
-| ![](./utils/assets/run-1.png) | ![](./utils/assets/run-2.png) | ![](./utils/assets/run-error-1.png) |
+| ![](./utils/assets/run-full.png) | ![](./utils/assets/run-2.png) | ![](./utils/assets/run-error-1.png) |
 

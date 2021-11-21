@@ -4,7 +4,6 @@ all:
 install:
 	dune build src/kawac.exe
 	mv ./_build/default/src/kawac.exe ./bin/kawac
-	rm -rf _build
 
 compile:
 ifdef file
@@ -26,9 +25,9 @@ clean:
 
 cleanall:
 	make clean
-	find -name '*.pimp' -type f -delete
-	find -name '*.pmimp' -type f -delete
-	find -name '*.vips' -type f -delete
-	find -name '*.vipsopt' -type f -delete
-	find -name '*.gips' -type f -delete
-	find -name '*.asm' -type f -delete
+	find . -name '*.pimp' -type f -delete
+	find . -name '*.pmimp' -type f -delete
+	find . -name '*.vips' -type f -delete
+	find . -name '*.vipsopt' -type f -delete
+	find . -name '*.gips' -type f -delete
+	find . -name '*.asm' -type f -delete

@@ -1,0 +1,33 @@
+var bool a;
+var bool b;
+
+main {
+
+  if (StdLib.max(41, 42) == 42) {
+
+    a = false;
+    b = true;
+
+    assert (!a && b);
+    assert (a || b);
+    assert !(a && !b);
+    assert !(!a && !b);
+    assert !(a && b);
+
+    printf("Tous les tests passent !\n");
+
+    assert a && b;
+
+    printf("Ou pas...\n");
+
+  }
+
+  return 0;
+}
+
+/*******************************************
+ *
+ *  Nombreux tests pour assert false,
+ *  avec l'utilisation de la StdLib
+ *
+ *******************************************/

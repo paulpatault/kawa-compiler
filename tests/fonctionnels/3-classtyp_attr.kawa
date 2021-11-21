@@ -1,3 +1,10 @@
+/*******************************************************
+ *
+ * Deux classes disjointes (sauf pour la méthode print),
+ * la seconde possède un attribut du type de la première
+ *
+ *******************************************************/
+
 var vector v;
 var point p;
 
@@ -5,16 +12,15 @@ class point {
   attribute int x;
   attribute int y;
 
-
   method void constructor (int x, int y) {
     this.x = x;
     this.y = y;
   }
 
   method void print () {
-    putchar(this.x);
-    putchar(this.y);
+    putchar("x=", this.x, ", y=", this.y);
   }
+
 }
 
 class vector {
@@ -30,7 +36,7 @@ class vector {
 }
 
 main {
-  p = new point(3, 2);
+  p = new point(4, 2);
   v = new vector(p);
   v.print();
   return 0;

@@ -1,7 +1,0 @@
-main {
-    assert true || false;
-    printf("coucou");
-    assert false;
-    printf("coucou");
-    return 0;
-}

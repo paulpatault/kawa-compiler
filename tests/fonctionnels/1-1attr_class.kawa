@@ -1,3 +1,11 @@
+/*******************************************************
+ *
+ * Premier exemple :
+ * cas de base avec une classe à un attribut
+ *
+ *******************************************************/
+
+
 var point2d p2;
 
 class point2d {

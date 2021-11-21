@@ -6,13 +6,25 @@ open Optim
 open Ast
 open Utils.Args
 
-let () =
+let append_stdlib main_prog =
+  let file = "stdlib/stdlib.kawa" in
+  let c  = open_in file in
+  let lb = Lexing.from_channel c in
+  let prog = Kawadir.Kawaparser.program Kawadir.Kawalexer.token lb in
+  close_in c;
+  assert (prog.globals = []);
+  assert (prog.main = []);
+  Kawa.mk_prog main_prog ~classes:Kawa.(prog.classes @ main_prog.classes)
 
+
+let () =
   let file = List.nth !input_files 0 in
   let c  = open_in file in
   let lb = Lexing.from_channel c in
   let prog = Kawaparser.program Kawalexer.token lb in
   close_in c;
+
+  let prog = append_stdlib prog in
 
   Kawa_type_checker.typ_prog prog ~file;
   print_endline "[OK] kawa  -> well typed";

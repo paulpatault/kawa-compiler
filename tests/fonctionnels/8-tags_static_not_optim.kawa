@@ -1,22 +1,41 @@
+/*******************************************************
+ *
+ * Exemple d'utilisation des méthodes statiques.
+ *
+ * Aussi, les deux méthodes (meth1 et meth2) ne sont pas pures,
+ * elles ne seront donc pas supprimées à la compilation.
+ *
+ * En revanche, la méthode meth3 est pure, et on peut examiner
+ * qu'elle n'est pas appelée car le résultat de cet appel n'est pas utile.
+ * Ainsi la phase d'optimisation supprime bien l'appel à cette méthode pure.
+ *
+ *******************************************************/
+
+
 class A {
 
   method void constructor() { }
 
   @{static}
-  method void untagged() {
-    putchar("u");
+  method void meth1() {
+    putchar("1");
   }
 
-  @{not_optim, static}
-  method void tagged() {
-    putchar("t");
+  @{static}
+  method void meth2() {
+    putchar("2");
+  }
+
+  method int meth3() {
+    return 1;
   }
 
 }
 
 main {
-  A.untagged(); // supprimé
-  A.tagged();   // pas supprimé
+  A.meth1();
+  A.meth2();
+  A.meth3();
   return 0;
 }
 

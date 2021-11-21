@@ -1,3 +1,11 @@
+/*******************************************************
+ *
+ * Test d'un appel de fonction avec beaucoup de paramètres
+ * -> pour vérifier que les paramètres ne passant pas par
+ *    les registre a0..a3 sont bien passés à la méthode
+ *
+ *******************************************************/
+
 var bigParam v;
 
 class bigParam {
@@ -17,6 +25,6 @@ class bigParam {
 }
 
 main {
-  v = new bigParam(8, 7, 6, 5, 4, 3, 2, 1);
+  v = new bigParam(9, 8, 7, 6, 5, 4, 3, 2, 1);
   return 0;
 }
