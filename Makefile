@@ -1,6 +1,11 @@
 all:
 	dune build src/
 
+install:
+	dune build src/kawac.exe
+	mv ./_build/default/src/kawac.exe ./bin/kawac
+	rm -rf _build
+
 compile:
 ifdef file
 	@dune exec src/kawac.exe $(file)

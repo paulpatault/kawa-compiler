@@ -112,7 +112,7 @@ Vous y retrouverez :
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.
 
 
-## Exemple d'éxecution
+## Exemples d'éxecution
 
 | Fichier kawa bien formé | Assert false dynamique | Fichier Kawa mal formé |
 |-|-|-|
