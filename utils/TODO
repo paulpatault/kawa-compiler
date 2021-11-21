@@ -1,5 +1,9 @@
+# Idées de modifications/ajouts
+
 - instanceof() : en cours
 - transtypage : en cours
 - classes abstraites : pas prévu de le faire
 - floats : trop compliqué
-- div et sub : bugfix todo
+- div et sub : bugfix
+- stdlib
+- arrays

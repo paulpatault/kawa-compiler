@@ -21,13 +21,14 @@ else
 endif
 
 clean:
+	rm -rf ./bin/kawac
 	dune clean
 
 cleanall:
 	make clean
-	find tests/ -name '*.pimp' -type f -delete
-	find tests/ -name '*.pmimp' -type f -delete
-	find tests/ -name '*.vips' -type f -delete
-	find tests/ -name '*.vipsopt' -type f -delete
-	find tests/ -name '*.gips' -type f -delete
-	find tests/ -name '*.asm' -type f -delete
+	find -name '*.pimp' -type f -delete
+	find -name '*.pmimp' -type f -delete
+	find -name '*.vips' -type f -delete
+	find -name '*.vipsopt' -type f -delete
+	find -name '*.gips' -type f -delete
+	find -name '*.asm' -type f -delete

@@ -8,33 +8,50 @@ Projet de M1@MPRI, dans le cadre du cours de compilation de [M.Balabonski](https
 - [Dune](https://dune.build) : installation avec `opam install dune`
 - [Menhir](http://gallium.inria.fr/~fpottier/menhir/) : installation avec `opam install menhir`
 
+## Installation
+
+Un simple clone sur le répertoire git : `git clone https://github.com/paulpatault/Kawa.git`.
+La compilation du projet peut se faire par un `make` ou un `make install`, en fonction de
+si vous allez utiliser l'[usage simple](https://github.com/paulpatault/Kawa#simple)
+ou l'[usage avec options](https://github.com/paulpatault/Kawa#avec-les-options).
+
 ## Usage
 
-+ Installation :
+### Simple
+  + Compilation du compilateur kawa
+      ```bash
+      $ make
+      ```
+  + Compilation d'un fichier kawa
+      ```bash
+      $ make compile file=<nom_du_fichier.kawa>
+      ```
+
+### Avec les options
++ Compilation du compilateur kawa
     ```bash
-    $ git clone https://github.com/paulpatault/Kawa.git
-    $ cd Kawa
-    $ make
+    $ make install
     ```
-+ Exécution :
-  + Pour commencer, compiler le fichier kawa :
++ Compilation d'un fichier kawa
     ```bash
-    $ make compile file=<nom_du_fichier.kawa>
+    $ ./bin/kawac [-verbose] <input_file.kawa> [-o <name_out.asm>]
     ```
-  + Puis éventuellement, exécuter directement en ligne de commande le fichier asm généré :
-  (nécessite le fichier `Mars4_5.jar` dans le dossier `./bin`)
-    ```bash
-    $ make run file=<nom_du_fichier.asm>
-    ```
-+ Rangement:
-    Suppression de l'exécutable et du dossier `_build`
-    ```bash
-    $ make clean
-    ```
-    Même chose que `make clean`, avec en plus une suppression des fichiers générés par une exécution
-    ```bash
-    $ make cleanall
-    ```
+
+### Simulation du code MIPS
+Il faut que le fichier `Mars4_5.jar` soit dans le dossier `./bin` :
+  ```bash
+  $ make run file=<nom_du_fichier.asm>
+  ```
+
+### Rangement:
+Suppression de l'exécutable et du dossier `_build`
+```bash
+$ make clean
+```
+Même chose que `make clean`, avec en plus une suppression des fichiers générés par une exécution
+```bash
+$ make cleanall
+```
 
 ## Organisation du code
 Le projet est régit par une architecture `dune`.
@@ -49,7 +66,7 @@ Vous retrouverez donc :
 - [`utils/`](./src/utils) : contient des fichiers implémentant un certain nombre de fonctions/exceptions/...
   utiles pour l'ensemble du projet.
 
-## Organisation des tests
+# Organisation des tests
 Les tests sont contenus dans le dossier [`tests/`](./tests) et séparé en deux sous dossiers.
 Vous y retrouverez :
 - [`fonctionnels/`](./tests/fonctionnels) : contient de nombreux fichiers d'exemple qui peuvent être compilés depuis
@@ -58,8 +75,8 @@ Vous y retrouverez :
   Aucun de ceux-ci ne passe à la compilation, le comportement attendu est le déclanchement
   d'une erreur.
 
-## Travail réalisé
-### Travail proposé
+# Travail réalisé
+## Travail proposé
 - Compilation des classes :
   - Les descripteurs sont enregistrés statiquement dans `.data`.
   - Les objets sont alloués dynamiquement sur le tas.
@@ -80,7 +97,7 @@ Vous y retrouverez :
   Ainsi, si le programme est incohérent, une exception accompagnée d'un message d'erreur
   précis indiquant la cause de l'erreur ainsi que sa localisation dans le code.
 
-### Modifications personnels
+## Modifications personnels
 - Extensions de `putchar` :
   - Ajout de la possibilité d'imprimer des strings avec la procédure `putchar("Hello World !")`.
   - `putchar` peut prendre autant un grand nombre de paramètres, autant que l'on veut. C'est à dire
@@ -107,6 +124,10 @@ Vous y retrouverez :
   Cela permet à l'utilisateur de ne pas annoter lui même toutes les fonctions ayant des effets de bord.
   Enfin, les méthodes que le programmeur aura annoté par le tag `@not_optim` ne seront pas traitées
   par cette méthode.
+- Possibilité de compiler un fichier kawa avec des options :
+  - `-o <out.asm>` : il est possible de choisir le nom de sortie du fichier MIPS généré.
+  - `-verbose` : si cette option est activé, les fichiers des langages intermédiaires seront générés.
+
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.
