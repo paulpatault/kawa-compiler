@@ -59,8 +59,12 @@ let pp_program prog out_channel =
         print "putchar(\"%s\");     | %s" s l
     | Assert (r, _, l) ->
         print "assert %s           | %s" r l
+    | Call(d, FName f, rs, [], l) ->
+       print "%s <- %s(%s)             | %s" d f (pp_args rs) l
     | Call(d, FName f, rs, tag, l) ->
        print "%s <- %s(%s) @<tag:%s>   | %s" d f (pp_args rs) (pp_tag tag) l
+    | Call(d, FPointeur f, rs, [], l) ->
+       print "%s <- _fpointeur_%s(%s)             | %s" d f (pp_args rs) l
     | Call(d, FPointeur f, rs, tag, l) ->
        print "%s <- _fpointeur_%s(%s) @<tag:%s>   | %s" d f (pp_args rs) (pp_tag tag) l
     | Return r ->
@@ -73,7 +77,7 @@ let pp_program prog out_channel =
 
   and pp_tag = function
     | [] -> ""
-    | [Ast.Pimp.Not_Optim] -> "Not_Optim"
+    | [Ast.Pimp.Optim] -> "Optim"
     | [Ast.Pimp.Static]    -> "Static"
     | a::args -> sprintf "%s, %s" (pp_tag [a]) (pp_tag args)
   in

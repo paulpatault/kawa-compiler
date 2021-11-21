@@ -1,4 +1,4 @@
-type tag = Not_Optim | Static
+type tag = Optim | Static
 
 type unop = Read | Alloc | Dec of int | Not
 type binop = Add | Sub | Mul | Div | Lt | Le | Gt | Ge | Eq | Neq | And | Or

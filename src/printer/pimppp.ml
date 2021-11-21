@@ -71,6 +71,8 @@ let pp_program prog out_channel =
       sprintf "alloc(%s)" (pp_expression e)
   | Binop(op, e1, e2) ->
       sprintf "(%s %s %s)" (pp_expression e1) (pp_binop op) (pp_expression e2)
+  | Call(FName f, args, []) ->
+      sprintf "%s(%s)" f (pp_args args)
   | Call(FName f, args, tag) ->
       sprintf "%s(%s) @<tag:%s>" f (pp_args args) (pp_tag tag)
   | Seq(seq, e) ->
@@ -78,12 +80,14 @@ let pp_program prog out_channel =
       pp_expression e
   | Addr s ->
       sprintf "addr(%s)" s
+  | Call(FPointer f, args, []) ->
+      sprintf "fpointeur:%s(%s)" (pp_expression f) (pp_args args)
   | Call(FPointer f, args, tag) ->
       sprintf "fpointeur:%s(%s) @<tags:%s>" (pp_expression f) (pp_args args) (pp_tag tag)
 
   and pp_tag = function
     | [] -> ""
-    | [Not_Optim] -> "Not_Optim"
+    | [Optim] -> "Optim"
     | [Static]    -> "Static"
     | a::args -> sprintf "%s, %s" (pp_tag [a]) (pp_tag args)
 
@@ -108,7 +112,12 @@ let pp_program prog out_channel =
   in
 
   let pp_function fdef =
-    print "function %s(%s) @<tag:%s> {\n" fdef.name (pp_params fdef.params) (pp_tag fdef.tag);
+    begin match fdef.tag with
+    | [] ->
+        print "function %s(%s) {\n" fdef.name (pp_params fdef.params)
+    | _ ->
+        print "function %s(%s) @<tag:%s> {\n" fdef.name (pp_params fdef.params) (pp_tag fdef.tag)
+    end;
     incr margin;
     pp_vars fdef.locals;
     pp_seq fdef.code;

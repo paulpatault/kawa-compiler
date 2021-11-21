@@ -35,11 +35,12 @@ let annot_prog (prog: program): program =
 
   let annot_method meth =
     if List.mem "not_optim" meth.tag then
-      meth
+      let tag = List.filter ((<>) "not_optim") meth.tag in
+      mk_meth_def ~tag meth
     else if is_pure_seq meth.code then
-      meth
+      mk_meth_def ~tag:("optim"::meth.tag) meth
     else
-      mk_meth_def ~tag:("not_optim"::meth.tag) meth
+      meth
   in
 
   let annot_class classe =

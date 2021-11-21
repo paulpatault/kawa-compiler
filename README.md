@@ -102,9 +102,11 @@ Vous y retrouverez :
     - sinon, rien ne se passe, et le programme continue "comme s'il n'avait pas croisé cette instruction"
     - un exemple est illutré dans le fichier [`assert-failure.kawa`](./tests/errors/assert-failure.kawa)
 - Interdiction pour les variables de commencer par une majuscule, mais les classes le peuvent (simplifie l'analyse depuis l'ajout des méthodes statiques).
-- Reconnaissance des fonctions pures : les autres seront marquées automatiquement du tag `not_optim`
+- Reconnaissance des fonctions pures : elles seront marquées automatiquement du tag `optim`
   dans l'analyse réalisée par le fichier [`kawa_annot.ml`](./src/kawadir/kawa_annot.ml).
   Cela permet à l'utilisateur de ne pas annoter lui même toutes les fonctions ayant des effets de bord.
+  Enfin, les méthodes que le programmeur aura annoté par le tag `@not_optim` ne seront pas traitées
+  par cette méthode.
 
 ## Remarques
 - Les modifications apportées ne rendent plus fonctionnel l'interprète fourni.

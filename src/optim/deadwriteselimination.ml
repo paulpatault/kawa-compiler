@@ -13,7 +13,7 @@ let dwe_step fdef =
       | GetParam(r, _, next)
       | Call(r, _, _, _, next) ->
           let optim = match i with
-          | Call (_, _, _, tags, _) -> not (List.mem Ast.Pimp.Not_Optim tags)
+          | Call (_, _, _, tags, _) -> List.mem Ast.Pimp.Optim tags
           | _ -> true
           in
           if not optim || S.mem r (Hashtbl.find live_out l) then

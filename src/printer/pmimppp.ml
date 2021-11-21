@@ -84,7 +84,7 @@ let pp_program prog out_channel =
 
   and pp_tag = function
     | [] -> ""
-    | [Ast.Pimp.Not_Optim] -> "Not_Optim"
+    | [Ast.Pimp.Optim] -> "Optim"
     | [Ast.Pimp.Static]    -> "Static"
     | a::args -> sprintf "%s, %s" (pp_tag [a]) (pp_tag args)
 
