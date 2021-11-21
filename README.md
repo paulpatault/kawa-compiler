@@ -22,7 +22,7 @@ ou l'[usage avec options](https://github.com/paulpatault/Kawa#avec-les-options).
       ```bash
       $ make
       ```
-  + Compilation d'un fichier kawa
+  + Compilation d'un fichier kawa (mode `-verbose` désactivé avec cette commande)
       ```bash
       $ make compile file=<nom_du_fichier.kawa>
       ```
@@ -32,7 +32,7 @@ ou l'[usage avec options](https://github.com/paulpatault/Kawa#avec-les-options).
     ```bash
     $ make install
     ```
-+ Compilation d'un fichier kawa
++ Compilation d'un fichier kawa avec des `command line options` (`-verbose` et `-o <name.asm>`)
     ```bash
     $ ./bin/kawac [-verbose] <input_file.kawa> [-o <name_out.asm>]
     ```
@@ -108,8 +108,8 @@ Vous y retrouverez :
     - connecteurs logiques : `&&` (et), `||` (ou), `!` (non)
   - Annotations dans le code : tags (à écrire juste avant une déclaration de méthode)
     - Syntaxe : `@{tag_name_1, …, tag_name_n}`.
-    - Tag `not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels.
-    - Tag `static` : avec ce tag les fonctions sont considérées comme statiques, elles peuvent donc être appelées par : `ClasseName.staticMethod()`, sans instance de classe.
+    - Tag `@not_optim` : rend impossible la suppression de la fonction lors de l'optimisation des appels.
+    - Tag `@static` : avec ce tag les fonctions sont considérées comme statiques, elles peuvent donc être appelées par : `ClasseName.staticMethod()`, sans instance de classe.
   - Fonction `printf()`, qui prend en arguments un string, suivi d'un certain nombre de d'expressions de type `int` ou `string`. Exemples :
     - `printf("a=%d\n", a)`, si a est une variable de type int.
     - `printf("a=%d, b=%d\n", a, b)`, si `a` et `b` sont des variables de type int.
