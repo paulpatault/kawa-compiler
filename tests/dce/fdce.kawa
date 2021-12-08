@@ -1,0 +1,14 @@
+class A {
+
+  method void constructor () { }
+
+  @{static}
+  method void meth() {
+    while (true) {}
+  }
+}
+
+main {
+  A.meth();
+  return 0;
+}
